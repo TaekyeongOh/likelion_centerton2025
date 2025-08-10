@@ -1,14 +1,14 @@
-@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css");
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css");
 
 :root {
-    --subfont: "Instrument Serif", serif;
-    --mainfont: "InaiMathi";
+    // --subfont: "";
+    --mainfont: "Pretendard";
 
     // 메인 컬러 
-    --black: #262326;
-    --white: #F3F3F3;
-    --gray: #9A9499;
-    --body: #FFFFFF;
+    --black: #333333;
+    --white: #FFFFFF;
+    --gray: #808080;
+    --body: #F5F5F5;
     --none: #00000000;
 
     // 폰트 세팅
