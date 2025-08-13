@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Entity
 @Table(name = "users")
 @Getter
@@ -12,21 +14,17 @@ public class SiteUser {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "restaurant_id", nullable = false, unique = true)
-    private Long restaurantId;
+    private Long id;
 
-    @Column(length = 50, nullable = false)
-    private String restaurantName;
-
-    @Column(length = 60, nullable = false)
-    private String restaurantPw;
-
-    @Column(length = 50, nullable = false)
     private String email;
+    private String password;
 
-    @Column(nullable = false)
-    private String role; // OWNER or CUSTOMER
-
-    @Column(name = "table_count")
+    // 2단계 회원가입에 필요한 필드 추가
+    private String restaurantName;
+    private String restaurantAddress;
+    private String description;
     private Integer tableCount;
+
+    @ManyToMany
+    private List<StoreFeature> features;
 }
