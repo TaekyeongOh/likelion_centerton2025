@@ -49,25 +49,28 @@ public class SiteUserService {
     @Transactional
     public SiteUser registerStep2(Long userId, UserRegisterStep2Request request) {
         SiteUser user = siteUserRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다."));
+                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
 
         user.setRestaurantName(request.getRestaurantName());
         user.setRestaurantAddress(request.getRestaurantAddress());
-        user.setDescription(request.getDescription());
+        user.setShortDescription(request.getShortDescription());
+        user.setLongDescription(request.getLongDescription());
         user.setTableCount(request.getTableCount());
 
-        List<StoreFeature> features = request.getFeatures().stream()
+        // features 처리
+        user.getFeatures().clear(); // 기존 컬렉션 초기화
+        request.getFeatures().stream()
+                .distinct()
                 .map(name -> storeFeatureRepository.findByName(name)
-                        .orElseGet(() -> {
-                            StoreFeature newFeature = new StoreFeature();
-                            newFeature.setName(name);
-                            return storeFeatureRepository.save(newFeature);
-                        })
-                ).collect(Collectors.toList());
-        user.setFeatures(features);
+                        .orElseGet(() -> new StoreFeature(name)))
+                .forEach(feature -> {
+                    feature.setUser(user);
+                    user.getFeatures().add(feature);
+                });
 
         return siteUserRepository.save(user);
     }
+
 
     // 로그인
     @Transactional(readOnly = true)

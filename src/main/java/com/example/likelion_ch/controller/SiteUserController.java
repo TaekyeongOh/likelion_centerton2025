@@ -28,8 +28,8 @@ public class SiteUserController {
 
     // 2단계 회원가입: SiteUser를 반환하도록 수정
     @PostMapping("/register/step2/{userId}")
-    public ResponseEntity<SiteUser> registerStep2(@PathVariable Long userId,
-                                                  @RequestBody UserRegisterStep2Request request) {
+    public ResponseEntity<?> registerStep2(@PathVariable Long userId,
+                                           @RequestBody UserRegisterStep2Request request) {
         SiteUser updatedUser = siteUserService.registerStep2(userId, request);
         return ResponseEntity.ok(updatedUser);
     }

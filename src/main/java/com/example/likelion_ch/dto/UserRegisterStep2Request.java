@@ -10,7 +10,8 @@ import java.util.List;
 public class UserRegisterStep2Request {
     private String restaurantName;
     private String restaurantAddress;
-    private String description;
+    private String shortDescription;
+    private String longDescription;
     private Integer tableCount;
     private List<String> features;
 }
