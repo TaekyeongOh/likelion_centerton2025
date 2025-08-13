@@ -11,6 +11,11 @@ import Menu3 from './components/Customer_Section/Menu3'
 import Menu4 from './components/Customer_Section/Menu4'
 import Menu5 from './components/Customer_Section/Menu5'
 import QRScan from './components/Customer_Section/QRScan'
+import Menu from './components/Customer_Section/Menu'
+import Menu_Best from './components/Customer_Section/Menu_Best'
+import Menu_Language from './components/Customer_Section/Menu_Language'
+import Cus_options from './components/Customer_Section/Cus_options'
+import Cus_order from './components/Customer_Section/Cus_order'
 
 const App = () => {
   return (
@@ -27,6 +32,11 @@ const App = () => {
       <Route path='/Menu4' element={<Menu4/>} />
       <Route path='/Menu5' element={<Menu5/>} />
       <Route path="/qr" element={<QRScan />} />
+      <Route path='/' element={<Menu />} />
+      <Route path='/menu_best' element={<Menu_Best />} />
+      <Route path='/menu_language' element={<Menu_Language />} />
+      <Route path='/cus_order' element={<Cus_order />} />
+      <Route path='/cus_options' element={<Cus_options />} />
     </Routes>
     </BrowserRouter>
   )
