@@ -1,5 +1,7 @@
 package com.example.likelion_ch.controller;
 
+import com.example.likelion_ch.dto.UserLoginRequest;
+import com.example.likelion_ch.dto.UserLoginResponse;
 import com.example.likelion_ch.dto.UserRegisterStep1Request;
 import com.example.likelion_ch.dto.UserRegisterStep2Request;
 import com.example.likelion_ch.entity.SiteUser; // SiteUser 엔티티 import
@@ -30,5 +32,16 @@ public class SiteUserController {
                                                   @RequestBody UserRegisterStep2Request request) {
         SiteUser updatedUser = siteUserService.registerStep2(userId, request);
         return ResponseEntity.ok(updatedUser);
+    }
+
+    // 로그인
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody UserLoginRequest request) {
+        try {
+            UserLoginResponse response = siteUserService.login(request);
+            return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(401).body(e.getMessage());
+        }
     }
 }

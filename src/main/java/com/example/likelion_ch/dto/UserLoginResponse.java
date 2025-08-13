@@ -9,6 +9,5 @@ public class UserLoginResponse {
     private Long id;
     private String restaurantName;
     private String email;
-    private String role;
     private Integer tableCount;
 }

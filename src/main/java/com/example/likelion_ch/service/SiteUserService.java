@@ -1,5 +1,7 @@
 package com.example.likelion_ch.service;
 
+import com.example.likelion_ch.dto.UserLoginRequest;
+import com.example.likelion_ch.dto.UserLoginResponse;
 import com.example.likelion_ch.dto.UserRegisterStep1Request;
 import com.example.likelion_ch.dto.UserRegisterStep2Request;
 import com.example.likelion_ch.entity.SiteUser;
@@ -65,5 +67,26 @@ public class SiteUserService {
         user.setFeatures(features);
 
         return siteUserRepository.save(user);
+    }
+
+    // 로그인
+    @Transactional(readOnly = true)
+    public UserLoginResponse login(UserLoginRequest request) {
+        SiteUser user = siteUserRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new IllegalArgumentException("이메일 또는 비밀번호가 올바르지 않습니다."));
+
+        // 비밀번호 검증
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            throw new IllegalArgumentException("이메일 또는 비밀번호가 올바르지 않습니다.");
+        }
+
+        // 로그인 성공 -> UserLoginResponse로 변환
+        UserLoginResponse response = new UserLoginResponse();
+        response.setId(user.getId());
+        response.setRestaurantName(user.getRestaurantName());
+        response.setEmail(user.getEmail());
+        response.setTableCount(user.getTableCount());
+
+        return response;
     }
 }
