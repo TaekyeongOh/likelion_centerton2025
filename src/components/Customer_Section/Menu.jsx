@@ -100,7 +100,7 @@ const Main = () => {
             <div id='menu' className="menu3">
                 <div className="text">
                   <h1>들기름 비빔밥</h1>
-                  <p>나물 5종과 밥, 들기름, 간ㅇ으로 비벼먹
+                  <p>나물 5종과 밥, 들기름, 간장으로 비벼먹
                     <br />는 한국식 채식 비빔밥.
                   </p>
                 </div>
