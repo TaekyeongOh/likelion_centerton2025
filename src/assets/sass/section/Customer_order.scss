@@ -41,48 +41,71 @@
             margin-bottom: 28px;
         }
 
-        .menu_sec {
+        .menu_section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             width: 350px;
-            height: 114px;
+            height: 194px;
             background-color: var(--white);
             box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.1);
             border-radius: 14px;
             padding: 0px 21px;
             display: flex;
-            align-items: center;
-            justify-content: space-between;
             margin-bottom: 20px;
 
-            .menu_left {
-                min-width: 0;
-                flex: 1 1 auto;
+            .menu_sec {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                margin-top: 20px;
+                gap: 15px;
 
-                .title {
-                    display: block;
-                    font-size: 20px;
-                    font-weight: 600;
-                    margin-bottom: 8px;
+                .menu_left {
+                    min-width: 0;
+                    flex: 1 1 auto;
+
+                    .title {
+                        display: block;
+                        font-size: 20px;
+                        font-weight: 600;
+                        margin-bottom: 8px;
+                    }
+
+                    p {
+                        font-size: 16px;
+                        font-weight: 400;
+                    }
                 }
 
-                p {
-                    font-size: 16px;
-                    font-weight: 400;
+                .menu_right {
+                    white-space: nowrap;
+                    flex: 0 0 56px;
+                    width: 56px;
+                    height: 31px;
+                    background-color: var(--blue01);
+                    color: var(--white);
+                    border-radius: 40px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    margin-top: -50px;
+                    margin-left: 0;
+                    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.1);
                 }
             }
 
-            .menu_right {
-                white-space: nowrap;
-                flex: 0 0 56px;
-                width: 56px;
-                height: 31px;
-                background-color: var(--blue01);
-                color: var(--white);
-                border-radius: 40px;
+            .add_cards {
+                margin-top: 35px;
+                width: 322px;
+                height: 49px;
+                border-radius: 8px;
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                margin-top: -50px;
-                box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.1);
+                font-size: 16px;
+                font-weight: 500;
+                background-color: var(--blue03);
             }
         }
 
@@ -158,7 +181,6 @@
             margin: 0 auto;
             padding: 0 27px;
             margin-bottom: 12px;
-            box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.1);
 
             .how {
                 display: block;
@@ -221,7 +243,7 @@
     }
 
     /* ------------------------- */
-    /* ✅ 모달(배경 블러 + 카드) */
+    /* 배경 블러 오버레이        */
     /* ------------------------- */
     .card_overlay {
         position: fixed;
@@ -246,79 +268,7 @@
         }
     }
 
-    /* ========================= */
-    /* ✅ 주문카드 시트 (시안화)  */
-    /* ========================= */
-    .card_sheet {
-        width: 340px;
-        max-width: calc(100% - 40px);
-        background: #fff;
-        border-radius: 18px;
-        box-shadow: 0 18px 40px rgba(0, 0, 0, .14);
-        padding: 18px 18px 16px;
-        animation: sheetPop .18s ease-out;
-
-        h2 {
-            font-size: 18px;
-            font-weight: 800;
-            color: var(--blue01);
-            text-align: center;
-            /* 시안처럼 중앙 */
-            margin: 6px 0 14px;
-            letter-spacing: -0.2px;
-        }
-
-        .card_list {
-            display: grid;
-            gap: 12px;
-            margin-bottom: 16px;
-
-            .card_item {
-                display: flex;
-                align-items: center;
-                gap: 12px;
-                background: #fff;
-                /* 시안: 흰 카드 */
-                border-radius: 16px;
-                padding: 14px 12px;
-                box-shadow: 0 6px 20px rgba(0, 66, 150, .08);
-                /* 부드러운 그림자 */
-                border: 1px solid rgba(0, 122, 255, .06);
-
-                .icon {
-                    width: 34px;
-                    height: 34px;
-                    display: grid;
-                    place-items: center;
-                    font-size: 22px;
-                    color: var(--blue01);
-                    /* 아이콘 파란 느낌 */
-                    flex: 0 0 34px;
-                }
-
-                p {
-                    font-size: 15px;
-                    font-weight: 600;
-                    line-height: 1;
-                    color: #1c1c1c;
-                }
-            }
-        }
-
-        .confirm_btn {
-            width: 100%;
-            height: 48px;
-            /* 시안: 더 큼 */
-            border-radius: 999px;
-            background: var(--blue01);
-            color: #fff;
-            font-size: 16px;
-            font-weight: 800;
-            letter-spacing: -0.3px;
-            box-shadow: 0 6px 16px rgba(0, 122, 255, .25);
-        }
-    }
-
+    /* 살짝 팝업 애니메이션 (공용) */
     @keyframes sheetPop {
         from {
             transform: translateY(10px);
@@ -331,11 +281,71 @@
         }
     }
 
-    /* ========================= */
-    /* ✅ 주문완료 모달          */
-    /* ========================= */
-    .done_modal {
-        width: 290px;
+    /* ------------------------- */
+    /* 주문완료 모달 (너가 준 디자인) */
+    /* ------------------------- */
+    .m_wrap {
+        width: 295px;
+        height: 282px;
+        background-color: #fff;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        border-radius: 17px;
+        padding: 12px;
+        box-shadow: 0 18px 40px rgba(0, 0, 0, .14);
+        animation: sheetPop .18s ease-out;
+
+        .md_img {
+            width: 166px;
+            height: 166px;
+            margin-top: -30px;
+            margin-bottom: 8px;
+
+            img {
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+                display: block;
+            }
+        }
+
+        h1 {
+            font-size: 36px;
+            color: var(--blue01);
+            margin: 0 0 6px;
+            line-height: 1.1;
+            text-align: center;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        p {
+            font-size: 20px;
+            margin: 0;
+            color: var(--black);
+            text-align: center;
+        }
+    }
+
+    /* ------------------------- */
+    /* 별점 모달                  */
+    /* ------------------------- */
+    /* 오버레이 내부 스택: 모달박스 + 바깥 버튼을 세로로 정렬 */
+    .rating_wrap {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+        /* 모달과 버튼 사이 간격 */
+        width: 100%;
+    }
+
+    /* 별점 모달 박스 (요구 크기) */
+    .rating_modal {
+        width: 295px;
+        height: 282px;
         max-width: calc(100% - 64px);
         background: #fff;
         border-radius: 18px;
@@ -343,120 +353,104 @@
         box-shadow: 0 18px 40px rgba(0, 0, 0, .14);
         text-align: center;
         animation: sheetPop .18s ease-out;
-
-        .illus {
-            width: 120px;
-            height: 90px;
-            margin: 2px auto 10px;
-            display: grid;
-            place-items: center;
-            font-size: 42px;
-            /* 자리표시자 이모지 */
-            background: linear-gradient(180deg, rgba(0, 122, 255, .08), rgba(0, 122, 255, .02));
-            border-radius: 12px;
-        }
+        margin-bottom: 20px;
 
         h3 {
-            font-size: 20px;
-            font-weight: 900;
+            margin-top: 10px;
+            font-size: 28px;
+            font-weight: 600;
             color: var(--blue01);
-            margin-bottom: 6px;
+            margin-bottom: 52px;
             letter-spacing: -0.3px;
         }
 
-        p {
-            font-size: 14px;
-            color: #4a4a4a;
-            margin-bottom: 14px;
-        }
+        .stars {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            margin-bottom: 10px;
 
-        .confirm_btn {
-            width: 100%;
-            height: 44px;
-            border-radius: 999px;
-            background: var(--blue01);
-            color: #fff;
-            font-size: 15px;
-            font-weight: 800;
-            box-shadow: 0 6px 16px rgba(0, 122, 255, .25);
-        }
-
-        /* ========================= */
-        /* ✅ 별점 모달               */
-        /* ========================= */
-        .rating_modal {
-            width: 300px;
-            max-width: calc(100% - 64px);
-            background: #fff;
-            border-radius: 18px;
-            padding: 20px 18px 16px;
-            box-shadow: 0 18px 40px rgba(0, 0, 0, .14);
-            text-align: center;
-            animation: sheetPop .18s ease-out;
-
-            h3 {
-                font-size: 18px;
-                font-weight: 900;
-                color: var(--blue01);
-                margin-bottom: 12px;
-                letter-spacing: -0.3px;
-            }
-
-            .stars {
-                display: flex;
-                gap: 8px;
+            .star {
+                background: transparent;
+                border: 0;
+                padding: 0;
+                cursor: pointer;
+                line-height: 0;
+                display: inline-flex;
+                align-items: center;
                 justify-content: center;
-                margin-bottom: 10px;
 
-                .star {
-                    background: transparent;
-                    border: 0;
-                    padding: 4px;
-                    cursor: pointer;
-                    line-height: 0;
-
-                    .star-shape {
-                        fill: transparent;
-                        /* 빈 별 */
-                        stroke: var(--blue01);
-                        stroke-width: 1.6;
-                    }
-
-                    &.filled .star-shape {
-                        fill: var(--blue01);
-                        /* 채워진 별 */
-                        stroke: var(--blue01);
-                    }
+                .star_img {
+                    width: 50px;
+                    /* 필요시 조절 */
+                    height: 50px;
+                    display: block;
+                    user-select: none;
+                    pointer-events: none;
+                    /* 버튼이 클릭 받도록 */
+                    transition: transform .12s ease-out;
                 }
-            }
 
-            .hint {
-                font-size: 14px;
-                color: #4a4a4a;
-                margin: 6px 0 14px;
-            }
-
-            .rate_btn {
-                height: 44px;
-                border-radius: 999px;
-                width: 100%;
-                font-weight: 800;
-                letter-spacing: -0.3px;
-
-                /* 비활성 회색 */
-                background: #e6e9ee;
-                color: #9aa3ad;
-                box-shadow: none;
-
-                &.active {
-                    background: var(--blue01);
-                    /* 활성 파랑 */
-                    color: #fff;
-                    box-shadow: 0 6px 16px rgba(0, 122, 255, .25);
+                &:hover .star_img,
+                &:focus-visible .star_img {
+                    transform: scale(1.06);
                 }
             }
         }
 
+        .hint {
+            font-size: 20px;
+            color: var(--black);
+            font-weight: 500;
+            margin: 60px 0 0;
+            /* 내부 버튼 제거했으니 하단 여백 최소화 */
+        }
     }
 
+    /* 모달 박스 바깥의 '평가 완료' 버튼 */
+    .rate_btn_outside {
+        width: 314px;
+        height: 46px;
+        border-radius: 999px;
+        font-weight: 500;
+        font-size: 24px;
+        letter-spacing: -0.3px;
+
+        background: #A6A6A6;
+        /* 비활성 */
+        color: var(--body);
+        box-shadow: none;
+
+        &.active {
+            background: var(--blue01);
+            color: #fff;
+            box-shadow: 0 6px 16px rgba(0, 122, 255, .25);
+        }
+    }
+
+    .thanks {
+        width: 295px;
+        height: 174px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background-color: #fff;
+        border-radius: 17px;
+        text-align: center;
+
+        h1 {
+            font-size: 28px;
+            color: var(--blue01);
+            margin-bottom: 20px;
+            font-weight: 600;
+
+        }
+
+        p {
+            font-size: 20px;
+            color: var(--black);
+            padding: 0 72px;
+        }
+    }
 }
