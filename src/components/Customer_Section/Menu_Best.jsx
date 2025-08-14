@@ -5,6 +5,7 @@ import main from '../../assets/img/cus_menu/main.png'
 import header from '../../assets/img/cus_menu/header.png'
 import cart from '../../assets/img/cus_menu/cart.svg'
 import { Link } from 'react-router-dom'
+import NumberSelector from './Menu_Table'
 
 const Menu_Bset = () => {
   return (
@@ -120,9 +121,16 @@ const Menu_Bset = () => {
             </div>
             </div>
         </main>
-        <div className="cart_icon">
-            <img src={cart} alt="" />
-            <div className="cart_count">1</div>
+        <div className="icon">
+                <div id="icon" className="cart_icon">
+                    <div className="cart">
+                    <img src={cart} alt="" />
+                    <div className="cart_count">1</div>
+                </div>
+                </div>
+            <div id="icon" className="table_icon">
+                <NumberSelector/>
+            </div>
         </div>
     </div>
   )
