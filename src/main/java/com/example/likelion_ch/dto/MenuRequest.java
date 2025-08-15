@@ -3,6 +3,7 @@ package com.example.likelion_ch.dto;
 public class MenuRequest {
     private String menuName;
     private String menuDescription;
+    private Integer menuPrice;
 
     public String getMenuName() {
         return menuName;
@@ -18,5 +19,13 @@ public class MenuRequest {
 
     public void setMenuDescription(String menuDescription) {
         this.menuDescription = menuDescription;
+    }
+
+    public Integer getMenuPrice() {
+        return menuPrice;
+    }
+
+    public void setMenuPrice(Integer menuPrice) {
+        this.menuPrice = menuPrice;
     }
 }

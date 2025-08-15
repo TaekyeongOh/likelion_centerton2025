@@ -44,19 +44,27 @@ public class StoreSettingsController {
     }
 
     @PostMapping("/menu_info")
-    public ResponseEntity<?> addMenu(@PathVariable Long userId, @RequestBody MenuRequest request) {
+    public ResponseEntity<MenuResponse> addMenu(@PathVariable Long userId,
+                                                @RequestBody MenuRequest request) {
         SiteUser user = siteUserRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
 
-        Menu menu = new Menu();
-        menu.setName(request.getMenuName());
-        menu.setDescription(request.getMenuDescription());
-        menu.setUser(user);
-        menu.setPrice(null);
+        Menu menu = new Menu(
+                request.getMenuName(),
+                request.getMenuPrice(),        // price 적용
+                request.getMenuDescription(),
+                user
+        );
 
-        Menu savedMenu = menuRepository.save(menu);
-        MenuResponse response = new MenuResponse(savedMenu.getId(), savedMenu.getName(), savedMenu.getDescription());
+        menu = menuRepository.save(menu);
+
+        MenuResponse response = new MenuResponse(
+                menu.getId(),
+                menu.getName(),
+                menu.getDescription(),
+                menu.getPrice()               // response에도 price 포함 가능
+        );
+
         return ResponseEntity.ok(response);
-
     }
 }
