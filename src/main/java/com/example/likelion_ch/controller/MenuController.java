@@ -27,13 +27,4 @@ public class MenuController {
         return ResponseEntity.ok(response);
     }
 
-    // 가게 정보 수정
-    @PatchMapping("/{userId}/settings")
-    public ResponseEntity<SiteUser> updateStore(
-            @PathVariable Long userId,
-            @RequestBody StoreUpdateRequest request) {
-
-        SiteUser updatedUser = storeService.updateStore(userId, request);
-        return ResponseEntity.ok(updatedUser);
-    }
 }
