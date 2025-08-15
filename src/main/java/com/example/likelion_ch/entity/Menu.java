@@ -1,5 +1,6 @@
 package com.example.likelion_ch.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,7 +21,8 @@ public class Menu {
     private String description;     // 메뉴 설명
 
     @ManyToOne
-    @JoinColumn(name = "user_id")  // 어느 사장님 메뉴인지
+    @JoinColumn(name = "user_id")
+    @JsonIgnore
     private SiteUser user;
 
     // 기본 생성자
