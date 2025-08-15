@@ -64,13 +64,12 @@ public class SiteUserService {
                 .map(name -> storeFeatureRepository.findByName(name)
                         .orElseGet(() -> new StoreFeature(name)))
                 .forEach(feature -> {
-                    feature.setUser(user);
-                    user.getFeatures().add(feature);
+                    user.getFeatures().add(feature);     // user 컬렉션에 feature 추가
+                    feature.getUsers().add(user);        // 양방향 설정
                 });
 
         return siteUserRepository.save(user);
     }
-
 
     // 로그인
     @Transactional(readOnly = true)
