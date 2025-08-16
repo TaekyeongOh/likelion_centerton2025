@@ -1,5 +1,12 @@
 package com.example.likelion_ch.dto;
 
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@Builder
 public class MenuResponse {
     private Long menuId;
     private String menuName;

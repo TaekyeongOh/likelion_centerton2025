@@ -2,6 +2,7 @@ package com.example.likelion_ch.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,6 +13,7 @@ import java.util.Set;
 @Table(name = "store_features")
 @Getter
 @Setter
+//@Builder
 public class StoreFeature {
 
     @Id

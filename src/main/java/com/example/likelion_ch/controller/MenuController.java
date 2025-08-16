@@ -1,26 +1,26 @@
 package com.example.likelion_ch.controller;
 
-import com.example.likelion_ch.dto.StoreResponse;
+import com.example.likelion_ch.dto.*;
 
-import com.example.likelion_ch.dto.StoreUpdateRequest;
 import com.example.likelion_ch.entity.SiteUser;
 import com.example.likelion_ch.service.MenuService;
 import com.example.likelion_ch.service.StoreService;
 import com.example.likelion_ch.util.QRCodeGenerator;
 
-import com.example.likelion_ch.dto.TopMenuResponse;
 // import com.example.likelion_ch.service.MenuService;
 import lombok.RequiredArgsConstructor;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import com.example.likelion_ch.dto.StoreMenusResponse;
 
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
+import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/store")
 @RequiredArgsConstructor
@@ -82,5 +82,25 @@ public class MenuController {
         }
     }
 
+    // 다국어 메뉴 조회
+    @GetMapping("/{userId}/lan/{lang}")
+    public ResponseEntity<List<MenuResponse>> getMenusByLanguage(
+            @PathVariable Long userId,
+            @PathVariable String lang) {
+
+        log.info("다국어 메뉴 조회 요청 - userId: {}, language: {}", userId, lang);
+
+        try {
+            List<MenuResponse> menus = menuService.getMenusByLanguage(userId, lang);
+            log.info("다국어 메뉴 조회 성공 - userId: {}, language: {}, menuCount: {}",
+                    userId, lang, menus.size());
+            return ResponseEntity.ok(menus);
+
+        } catch (Exception e) {
+            log.error("다국어 메뉴 조회 실패 - userId: {}, language: {}, error: {}",
+                    userId, lang, e.getMessage(), e);
+            return ResponseEntity.badRequest().build();
+        }
+    }
 }
 

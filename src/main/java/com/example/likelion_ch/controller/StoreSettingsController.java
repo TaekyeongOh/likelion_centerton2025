@@ -7,6 +7,7 @@ import com.example.likelion_ch.entity.Menu;
 import com.example.likelion_ch.entity.SiteUser;
 import com.example.likelion_ch.repository.MenuRepository;
 import com.example.likelion_ch.repository.SiteUserRepository;
+import com.example.likelion_ch.service.MenuService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
