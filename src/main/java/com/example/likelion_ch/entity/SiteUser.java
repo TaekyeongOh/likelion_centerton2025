@@ -6,7 +6,9 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -32,8 +34,12 @@ public class SiteUser {
     private String longDescription;
     private Integer tableCount;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ManyToMany
+    @JoinTable(
+            name = "user_features",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "feature_id")
+    )
     @JsonManagedReference
-    private List<StoreFeature> features = new ArrayList<>();
-
+    private Set<StoreFeature> features = new HashSet<>();
 }

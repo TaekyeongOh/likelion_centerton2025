@@ -64,17 +64,16 @@ public class SiteUserService {
                 .map(name -> storeFeatureRepository.findByName(name)
                         .orElseGet(() -> new StoreFeature(name)))
                 .forEach(feature -> {
-                    feature.setUser(user);
-                    user.getFeatures().add(feature);
+                    user.getFeatures().add(feature);     // user 컬렉션에 feature 추가
+                    feature.getUsers().add(user);        // 양방향 설정
                 });
 
         return siteUserRepository.save(user);
     }
 
-
     // 로그인
     @Transactional(readOnly = true)
-    public UserLoginResponse login(UserLoginRequest request) {
+    public SiteUser login(UserLoginRequest request) {
         SiteUser user = siteUserRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new IllegalArgumentException("이메일 또는 비밀번호가 올바르지 않습니다."));
 
@@ -83,13 +82,6 @@ public class SiteUserService {
             throw new IllegalArgumentException("이메일 또는 비밀번호가 올바르지 않습니다.");
         }
 
-        // 로그인 성공 -> UserLoginResponse로 변환
-        UserLoginResponse response = new UserLoginResponse();
-        response.setId(user.getId());
-        response.setRestaurantName(user.getRestaurantName());
-        response.setEmail(user.getEmail());
-        response.setTableCount(user.getTableCount());
-
-        return response;
+        return user; // 엔티티 직접 반환
     }
 }
