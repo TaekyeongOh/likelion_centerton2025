@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import qr_btn from '../../assets/img/cus_order/qr_btn.svg';
 
-const Owner_home_second = () => {
+const Owner_home_fourth = () => {
   const TOTAL_PAGES = 5;
-  const current = 2; 
+  const current = 4; 
   const navigate = useNavigate();
 
   const PAGE_SLUGS = ['first', 'second', 'third', 'fourth', 'fifth'];
@@ -67,7 +67,7 @@ const Owner_home_second = () => {
 
 
   return (
-    <div className='ownerhomes_wrap container'>
+    <div className='ownerhomefo_wrap container'>
       <div className="header">
         <button className="qr"><img src={qr_btn} alt="" /></button>
       </div>
@@ -130,7 +130,7 @@ const Owner_home_second = () => {
           </div>
         </div>
 
-        <h2 className="sub_title">일본 인기 메뉴</h2>
+        <h2 className="sub_title">영어권 인기 메뉴</h2>
 
         <div className="slider_footer">
           <div className="dots">
@@ -139,10 +139,10 @@ const Owner_home_second = () => {
               return (
                 <button
                   key={page}
-                  className={`dot ${page === 2 ? 'active' : ''}`}
+                  className={`dot ${page === 4 ? 'active' : ''}`}
                   onClick={() => navigate(pathFor(page))}
                   aria-label={`${page}번 페이지`}
-                  aria-current={page === 2 ? 'page' : undefined}
+                  aria-current={page === 4 ? 'page' : undefined}
                 />
               );
             })}
@@ -153,4 +153,4 @@ const Owner_home_second = () => {
   )
 }
 
-export default Owner_home_second
+export default Owner_home_fourth

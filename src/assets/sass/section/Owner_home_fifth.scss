@@ -1,4 +1,4 @@
-.ownerhomef_wrap {
+.ownerhomefifth_wrap {
     width: 395px;
     background-color: var(--body);
     padding-top: 0px;
@@ -16,7 +16,6 @@
             top: 37px;
             right: 22px;
         }
-
     }
 
     .text {
@@ -185,137 +184,60 @@
 
     .trend_section {
         padding: 0 22px;
+    }
 
-        .sec_title {
+    .sec_title {
+        font-size: 20px;
+        font-weight: 600;
+        color: var(--blue01);
+        margin-bottom: 40px;
+        margin-top: 32px;
+    }
+
+    .rating {
+        width: 317px;
+        height: 239px;
+        background-color: #fff;
+        border-radius: 14px;
+        box-shadow: 0 0 7.4px rgba(0, 0, 0, 0.1);
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+        margin: 0 auto;
+
+        .rating_text {
+            margin-top: 25px;
+            color: var(--blue02);
             font-size: 20px;
             font-weight: 600;
-            color: var(--blue01);
-            margin: 32px 0 40px;
         }
 
-        .rank {
-            padding: 0 22px;
-            margin-left: -22px;
+        .starFilled,
+        .starEmpty {
+            width: 50px;
+            height: 50px;
+        }
 
-            .rank_first {
-                display: flex;
-                align-items: center;
+        .stars {
+            display: flex;
+            gap: 6px;
+            margin: 12px 0 20px;
+        }
 
-                .rnum {
-                    font-size: 40px;
-                    font-weight: 600;
-                    color: var(--blue01);
-                    margin-right: 16px;
-                    margin-top: -10px;
-                }
-
-                .rank_line {
-                    width: 277px;
-                    height: 48px;
-                    background-color: var(--blue01);
-                    color: var(--white);
-                    border-radius: 10px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: flex-end;
-                    padding-right: 13px;
-                    text-align: right;
-                    gap: 8px;
-                    box-shadow: 0 0 7.4px rgba(0, 0, 0, 0.1);
-
-                    .country {
-                        font-size: 20px;
-                        font-weight: 600;
-                        line-height: 1;
-                    }
-
-                    .percent {
-                        font-size: 16px;
-                        font-weight: 600;
-                        line-height: 1;
-                    }
-                }
-            }
-
-            .rank_second {
-                display: flex;
-                align-items: center;
-                margin-top: 20px;
-
-                .rnum {
-                    font-size: 40px;
-                    font-weight: 600;
-                    color: var(--blue01);
-                    margin-right: 16px;
-                    margin-top: -10px;
-                }
-
-                .rank_line {
-                    width: 141px;
-                    height: 48px;
-                    background-color: #93DFFF;
-                    color: var(--white);
-                    border-radius: 10px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: flex-end;
-                    padding-right: 13px;
-                    text-align: right;
-                    gap: 8px;
-                    box-shadow: 0 0 7.4px rgba(0, 0, 0, 0.1);
-
-                    .country {
-                        font-size: 20px;
-                        font-weight: 600;
-                        line-height: 1;
-                    }
-
-                    .percent {
-                        font-size: 16px;
-                        font-weight: 600;
-                        line-height: 1;
-                    }
-                }
-            }
-
-            .rank_third {
-                display: flex;
-                align-items: center;
-                margin-top: 20px;
-
-                .rnum {
-                    font-size: 40px;
-                    font-weight: 600;
-                    color: var(--blue01);
-                    margin-right: 16px;
-                    margin-top: -10px;
-                }
-
-                .rank_line {
-                    width: 53px;
-                    height: 48px;
-                    background-color: #1A95C9;
-                    border-radius: 10px;
-                    box-shadow: 0 0 7.4px rgba(0, 0, 0, 0.1);
-                    margin-right: 12px;
-                }
-
-                .country {
-                    color: #1A95C9;
-                    font-size: 20px;
-                    font-weight: 600;
-                    line-height: 1;
-                    margin-right: 8px;
-                }
-
-                .percent {
-                    color: #1A95C9;
-                    font-size: 16px;
-                    font-weight: 600;
-                    line-height: 1;
-                }
-            }
-
+        .rating_detail {
+            font-size: 16px;
+            font-weight: 400;
+            text-align: center;
+            color: var(--blue02);
+            padding: 0 20px;
+            width: 287px;
+            height: 92px;
+            margin: 0 auto;
+            overflow-wrap: break-word;
+            word-break: break-word;
+            white-space: normal;
+            overflow: hidden;
         }
     }
 
@@ -325,8 +247,9 @@
         font-weight: 600;
         display: flex;
         align-items: center;
+        text-align: center;
         justify-content: center;
-        margin: 50px 0 10px;
+        margin: 40px 0 10px;
     }
 
     .slider_footer {
@@ -358,5 +281,4 @@
         border-radius: 9999px;
         background: var(--blue01);
     }
-
 }
