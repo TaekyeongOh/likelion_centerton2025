@@ -1,59 +1,87 @@
 package com.example.likelion_ch.service;
 
-import com.example.likelion_ch.dto.UserRegisterRequest;
 import com.example.likelion_ch.dto.UserLoginRequest;
 import com.example.likelion_ch.dto.UserLoginResponse;
+import com.example.likelion_ch.dto.UserRegisterStep1Request;
+import com.example.likelion_ch.dto.UserRegisterStep2Request;
 import com.example.likelion_ch.entity.SiteUser;
+import com.example.likelion_ch.entity.StoreFeature;
 import com.example.likelion_ch.repository.SiteUserRepository;
+import com.example.likelion_ch.repository.StoreFeatureRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class SiteUserService {
-
     private final SiteUserRepository siteUserRepository;
+    private final StoreFeatureRepository storeFeatureRepository;
     private final BCryptPasswordEncoder passwordEncoder;
 
-    public SiteUserService(SiteUserRepository siteUserRepository) {
+    public SiteUserService(SiteUserRepository siteUserRepository,
+                           StoreFeatureRepository storeFeatureRepository) {
         this.siteUserRepository = siteUserRepository;
+        this.storeFeatureRepository = storeFeatureRepository;
         this.passwordEncoder = new BCryptPasswordEncoder();
     }
 
-    public UserLoginResponse registerUser(UserRegisterRequest request) {
+    // 1단계 회원가입: SiteUser 엔티티를 반환하도록 수정
+    @Transactional
+    public SiteUser registerStep1(UserRegisterStep1Request request) {
+        if (!request.getPassword().equals(request.getConfirmPassword())) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
         if (siteUserRepository.findByEmail(request.getEmail()).isPresent()) {
             throw new IllegalArgumentException("이미 존재하는 이메일입니다.");
         }
 
         SiteUser user = new SiteUser();
-        user.setRestaurantName(request.getRestaurantName());
-        user.setRestaurantPw(passwordEncoder.encode(request.getRestaurantPw()));
         user.setEmail(request.getEmail());
-        user.setRole(request.getRole() != null ? request.getRole() : "CUSTOMER");
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+
+        return siteUserRepository.save(user);
+    }
+
+    // 2단계 가게 정보 등록: SiteUser 엔티티를 반환하도록 수정
+    @Transactional
+    public SiteUser registerStep2(Long userId, UserRegisterStep2Request request) {
+        SiteUser user = siteUserRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+
+        user.setRestaurantName(request.getRestaurantName());
+        user.setRestaurantAddress(request.getRestaurantAddress());
+        user.setShortDescription(request.getShortDescription());
+        user.setLongDescription(request.getLongDescription());
         user.setTableCount(request.getTableCount());
 
-        SiteUser savedUser = siteUserRepository.save(user);
+        // features 처리
+        user.getFeatures().clear(); // 기존 컬렉션 초기화
+        request.getFeatures().stream()
+                .distinct()
+                .map(name -> storeFeatureRepository.findByName(name)
+                        .orElseGet(() -> new StoreFeature(name)))
+                .forEach(feature -> {
+                    user.getFeatures().add(feature);     // user 컬렉션에 feature 추가
+                    feature.getUsers().add(user);        // 양방향 설정
+                });
 
-        return toUserResponse(savedUser); // Changed here
+        return siteUserRepository.save(user);
     }
 
-    public UserLoginResponse login(UserLoginRequest request) {
+    // 로그인
+    @Transactional(readOnly = true)
+    public SiteUser login(UserLoginRequest request) {
         SiteUser user = siteUserRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new IllegalArgumentException("이메일이 존재하지 않습니다."));
+                .orElseThrow(() -> new IllegalArgumentException("이메일 또는 비밀번호가 올바르지 않습니다."));
 
-        if (!passwordEncoder.matches(request.getPassword(), user.getRestaurantPw())) {
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        // 비밀번호 검증
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            throw new IllegalArgumentException("이메일 또는 비밀번호가 올바르지 않습니다.");
         }
 
-        return toUserResponse(user); // Changed here
-    }
-
-    private UserLoginResponse toUserResponse(SiteUser user) {
-        UserLoginResponse dto = new UserLoginResponse();
-        dto.setId(user.getRestaurantId());
-        dto.setRestaurantName(user.getRestaurantName());
-        dto.setEmail(user.getEmail());
-        dto.setRole(user.getRole());
-        dto.setTableCount(user.getTableCount());
-        return dto;
+        return user; // 엔티티 직접 반환
     }
 }
