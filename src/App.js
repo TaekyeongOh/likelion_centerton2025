@@ -1,6 +1,6 @@
 import React from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import Main from './components/Customer_Section/Main'
+import Main from './components/Owner_Section/Main'
 import Onboarding from './components/Owner_Section/Onboarding'
 import Login from './components/Owner_Section/Login'
 import Signup from './components/Owner_Section/Signup'
