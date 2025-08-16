@@ -1,13 +1,21 @@
 package com.example.likelion_ch.controller;
 
 import com.example.likelion_ch.dto.StoreResponse;
+
 import com.example.likelion_ch.dto.StoreUpdateRequest;
 import com.example.likelion_ch.entity.SiteUser;
 import com.example.likelion_ch.service.MenuService;
 import com.example.likelion_ch.service.StoreService;
 import com.example.likelion_ch.util.QRCodeGenerator;
+
+import com.example.likelion_ch.dto.TopMenuResponse;
+// import com.example.likelion_ch.service.MenuService;
+import lombok.RequiredArgsConstructor;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.example.likelion_ch.dto.StoreMenusResponse;
+
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -15,6 +23,7 @@ import java.io.ByteArrayOutputStream;
 
 @RestController
 @RequestMapping("/api/store")
+@RequiredArgsConstructor
 public class MenuController {
 
     private final MenuService menuService;
@@ -25,13 +34,30 @@ public class MenuController {
         this.storeService = storeService;
     }
 
-    // 가게 정보 + 메뉴 리스트 한 번에 GET
+    // 가게 정보 + 메뉴 리스트
     @GetMapping("/{userId}")
     public ResponseEntity<StoreResponse> getStoreWithMenu(@PathVariable Long userId) {
-        StoreResponse response = menuService.getStoreWithMenu(userId);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(menuService.getStoreWithMenu(userId));
     }
 
+    // 베스트 메뉴 TOP3
+    @GetMapping("/{userId}/top3")
+    public ResponseEntity<TopMenuResponse> getBestMenus(@PathVariable Long userId) {
+        return ResponseEntity.ok(menuService.getBestMenus(userId));
+    }
+
+    // 언어 기반 추천 메뉴 TOP3
+    @GetMapping("/{userId}/recommend")
+    public ResponseEntity<TopMenuResponse> getRecommendedMenus(@PathVariable Long userId,
+                                                               @RequestParam String lang) {
+        return ResponseEntity.ok(menuService.getRecommendedMenus(userId, lang));
+    }
+
+    // MenuController.java
+    @GetMapping("/{userId}/all")
+    public ResponseEntity<StoreMenusResponse> getAllMenus(@PathVariable Long userId) {
+        return ResponseEntity.ok(menuService.getAllMenus(userId));
+    }
 
     // QRCode
     @GetMapping("/{userId}/qrCode")
@@ -57,3 +83,4 @@ public class MenuController {
     }
 
 }
+

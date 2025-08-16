@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import java.util.List;
 
 @Entity
 @Table(name = "menus")
@@ -18,7 +19,7 @@ public class Menu {
 
     private String name;            // 메뉴 이름
     private Integer price;          // 가격
-    private String description;     // 메뉴 설명
+    private String description;  //메뉴 설명
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -34,4 +35,8 @@ public class Menu {
         this.description = description;
         this.user = user;
     }
+
+    @OneToMany(mappedBy = "menu")
+    private List<OrderItem> orderItems;
+
 }
