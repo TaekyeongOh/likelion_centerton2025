@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class OrderController {
 
     private final MenuService menuService;
-
-    // 주문 생성 (손님용)
+    // 주문생성
+    // 손님용
     @PostMapping("/api/store/orders")
     public ResponseEntity<Void> createOrder(@RequestBody CreateOrderRequest request) {
         menuService.createOrder(request);
