@@ -29,10 +29,10 @@ public class MenuController {
     private final MenuService menuService;
     private final StoreService storeService;
 
-    public MenuController(MenuService menuService, StoreService storeService) {
-        this.menuService = menuService;
-        this.storeService = storeService;
-    }
+//    public MenuController(MenuService menuService, StoreService storeService) {
+//        this.menuService = menuService;
+//        this.storeService = storeService;
+//    }
 
     // 가게 정보 + 메뉴 리스트
     @GetMapping("/{userId}")

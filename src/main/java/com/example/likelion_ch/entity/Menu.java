@@ -37,6 +37,7 @@ public class Menu {
     }
 
     @OneToMany(mappedBy = "menu")
+    @JsonIgnore
     private List<OrderItem> orderItems;
 
 }
