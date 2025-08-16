@@ -5,6 +5,9 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity
 @Table(name = "store_features")
 @Getter
@@ -18,13 +21,13 @@ public class StoreFeature {
     @Column(length = 100, nullable = false, unique = true)
     private String name;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
+    @ManyToMany(mappedBy = "features")
     @JsonBackReference
-    private SiteUser user;
+    private Set<SiteUser> users = new HashSet<>();
 
-    //  JPA용 기본 생성자
-    public StoreFeature() {}
+    // JPA용 기본 생성자
+    public StoreFeature() {
+    }
 
     public StoreFeature(String name) {
         this.name = name;
