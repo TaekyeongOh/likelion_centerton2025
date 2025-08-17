@@ -75,7 +75,6 @@ const deleteMenuSection = (id) => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path='/menu_edit' element={<Menu_Edit />} />
         <Route path='/menu_english' element={<Menu_English />} />
         <Route path='/menu_japanese' element={<Menu_Japanese />} />
         <Route path='/menu_chinese' element={<Menu_Chinese />} />
