@@ -5,6 +5,12 @@ import Menu_English from './components/Owner_Section/Menu_English'
 import Menu_Japanese from './components/Owner_Section/Menu_Japanese'
 import Menu_Chinese from './components/Owner_Section/Menu_Chinese'
 import Owner_QR from './components/Owner_Section/Owner_QR'
+import Owner_home_second from './components/Owner_Section/Owner_home_second'
+import Owner_home_first from './components/Owner_Section/Owner_home_first'
+import Owner_home_third from './components/Owner_Section/Owner_home_third'
+import Owner_home_fourth from './components/Owner_Section/Owner_home_fourth'
+import Owner_home_fifth from './components/Owner_Section/Owner_home_fifth'
+
 
 const App = () => {
   return (
@@ -15,7 +21,12 @@ const App = () => {
       <Route path='/menu_japanese' element={<Menu_Japanese />} />
       <Route path='/menu_chinese' element={<Menu_Chinese />} />
       <Route path='/owner_qr' element={<Owner_QR />} />
-    </Routes>
+      <Route path='/owner_home_first' element={<Owner_home_first />} />
+      <Route path='/owner_home_second' element={<Owner_home_second />} />
+      <Route path='/owner_home_third' element={<Owner_home_third />} />
+      <Route path='/owner_home_fourth' element={<Owner_home_fourth />} />
+      <Route path='/owner_home_fifth' element={<Owner_home_fifth />} />
+      </Routes>
     </BrowserRouter>
   )
 }
