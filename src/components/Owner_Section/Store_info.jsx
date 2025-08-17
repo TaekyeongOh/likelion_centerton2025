@@ -79,7 +79,7 @@ const Store_info = () => {
       </div>
 
       <div className="start_button">
-        <button onClick={() => navigate('/Login')}>
+        <button onClick={() => navigate('/owner_home_first')}>
         <img src={Start} alt="" />
         </button>
       </div>
