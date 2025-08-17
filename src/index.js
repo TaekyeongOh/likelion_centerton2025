@@ -8,6 +8,8 @@ import './assets/sass/section/onboarding.scss'
 import './assets/sass/section/login.scss'
 import './assets/sass/section/signup.scss'
 import './assets/sass/section/store_info.scss'
+import './assets/sass/section/Owner_menu_language.scss'
+import './assets/sass/section/Owner_QR.scss'
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
