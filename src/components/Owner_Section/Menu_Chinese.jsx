@@ -141,7 +141,8 @@ const Menu_Chinese = () => {
             </div>
           </div>
           <div className="bottom">
-            <button><img src={QRadd} alt="" /></button>
+            <button onClick={() => navigate('/owner_qr')}>
+              <img src={QRadd} alt="" /></button>
           </div>
         </div>
       </div>
