@@ -10,16 +10,16 @@ import starFilled from '../../assets/img/cus_order/star_filled.png';
 const Cus_order = () => {
   const navigate = useNavigate();
 
-  // ✅ 현재 사용하는 상태만 유지
+  //  현재 사용하는 상태만 유지
   const [isDoneOpen, setIsDoneOpen] = useState(false);
   const [isRatingOpen, setIsRatingOpen] = useState(false);
   const [isThanksOpen, setIsThanksOpen] = useState(false); // ← useEffect 위로 이동
   const [rating, setRating] = useState(0);
 
-  // ✅ 옵션 페이지로 이동
+  // 옵션 페이지로 이동
   const goToOptions = () => navigate('/cus_options');
 
-  // ✅ 모달 열릴 때만 스크롤 락
+  // 모달 열릴 때만 스크롤 락
   useEffect(() => {
     const lock = isDoneOpen || isRatingOpen || isThanksOpen;
     document.body.style.overflow = lock ? 'hidden' : '';
@@ -28,17 +28,17 @@ const Cus_order = () => {
     };
   }, [isDoneOpen, isRatingOpen, isThanksOpen]);
 
-  // ✅ 주문완료 → 별점 모달
+  //  주문완료 → 별점 모달
   const openRating = () => {
     setIsDoneOpen(false);
     setRating(0);
     setIsRatingOpen(true);
   };
 
-  // ✅ 주문하기 → 주문완료 모달
+  // 주문하기 → 주문완료 모달
   const openDone = () => setIsDoneOpen(true);
 
-  // ✅ 별점 선택
+  //  별점 선택
   const selectStar = (n) => setRating(n);
 
   return (
