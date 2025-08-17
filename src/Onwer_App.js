@@ -3,8 +3,6 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Menu_Edit from './components/Owner_Section/Menu_Edit';
 import Menu_Edit_Popup1 from './components/Owner_Section/Menu_Edit_Popup1';
 import Menu_Edit_Popup2 from './components/Owner_Section/Menu_Edit_Popup2';
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import Menu_Edit from './components/Owner_Section/Menu_Edit'
 import Menu_English from './components/Owner_Section/Menu_English'
 import Menu_Japanese from './components/Owner_Section/Menu_Japanese'
 import Menu_Chinese from './components/Owner_Section/Menu_Chinese'
@@ -76,7 +74,6 @@ const deleteMenuSection = (id) => {
 
   return (
     <BrowserRouter>
-    
       <Routes>
         <Route path='/menu_edit' element={<Menu_Edit />} />
         <Route path='/menu_english' element={<Menu_English />} />
