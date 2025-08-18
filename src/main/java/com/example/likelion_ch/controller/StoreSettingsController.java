@@ -63,11 +63,11 @@ public class StoreSettingsController {
     }
 
     // --- 단일 메뉴 조회 ---
-    @GetMapping("/menu_info/{menuId}")
+    @GetMapping("/menu_info/id/{userMenuId}")
     public ResponseEntity<MenuResponse> getMenu(
             @PathVariable Long userId,
-            @PathVariable Long menuId) {
-        MenuResponse menu = menuService.getMenuById(userId, menuId);
+            @PathVariable Integer userMenuId) {
+        MenuResponse menu = menuService.getMenuById(userId, userMenuId);
         return ResponseEntity.ok(menu);
     }
 
@@ -81,7 +81,7 @@ public class StoreSettingsController {
     }
 
     // --- 메뉴 수정 ---
-    @PutMapping("/menu_info/{userMenuId}")
+    @PutMapping("/menu_info/id/{userMenuId}")
     public ResponseEntity<MenuResponse> updateMenu(
             @PathVariable Long userId,
             @PathVariable Integer userMenuId,
@@ -92,11 +92,23 @@ public class StoreSettingsController {
     }
 
     // --- 메뉴 삭제 ---
-    @DeleteMapping("/menu_info/{userMenuId}")
+    @DeleteMapping("/menu_info/id/{userMenuId}")
     public ResponseEntity<Void> deleteMenu(
             @PathVariable Long userId,
             @PathVariable("userMenuId") Integer userMenuId) {
         menuService.deleteMenu(userId, userMenuId);
         return ResponseEntity.noContent().build();
     }
+
+    // 번역
+    @GetMapping("/menu_info/{langCode}")
+    public ResponseEntity<List<MenuInfo>> getMenuByLanguage(
+            @PathVariable Long userId,
+            @PathVariable String langCode) {
+
+        List<MenuInfo> menuList = menuService.getMenusByLanguage(userId, langCode);
+
+        return ResponseEntity.ok(menuList);
+    }
+
 }
