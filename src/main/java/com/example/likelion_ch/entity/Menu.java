@@ -54,6 +54,10 @@ public class Menu {
     @JsonIgnore
     private SiteUser user;
 
+    // userId 필드 추가
+    @Column(name = "user_id", insertable = false, updatable = false)
+    private Long userId;
+
     // 기본 생성자
     public Menu() {}
 
@@ -73,5 +77,10 @@ public class Menu {
     }
     public void setMenuName(String menuName) {
         this.nameKo = menuName;
+    }
+
+    // userId getter 추가
+    public Long getUserId() {
+        return this.user != null ? this.user.getId() : null;
     }
 }
