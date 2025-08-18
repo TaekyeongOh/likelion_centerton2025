@@ -1,3 +1,5 @@
+env
+.cursor
 application.yml
 HELP.md
 .gradle
