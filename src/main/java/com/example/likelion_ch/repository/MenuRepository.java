@@ -35,4 +35,12 @@ public interface MenuRepository extends JpaRepository<Menu, Long> {
 
     @Query("SELECT COALESCE(MAX(m.userMenuId), 0) FROM Menu m WHERE m.user = :user")
     Integer findMaxUserMenuId(@Param("user") SiteUser user);
+
+    // 특정 사용자의 특정 언어 메뉴 조회
+    @Query("SELECT m FROM Menu m WHERE m.user.id = :userId AND m.language = :language")
+    List<Menu> findByUserIdAndLanguage(@Param("userId") Long userId, @Param("language") String language);
+
+    // 특정 사용자의 모든 메뉴 조회 (언어별로 그룹화)
+    @Query("SELECT m FROM Menu m WHERE m.user.id = :userId ORDER BY m.userMenuId, m.language")
+    List<Menu> findByUserIdOrderByUserMenuIdAndLanguage(@Param("userId") Long userId);
 }

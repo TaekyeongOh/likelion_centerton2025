@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -25,6 +26,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/store")
 @RequiredArgsConstructor
@@ -33,6 +35,32 @@ public class MenuController {
 
     private final MenuService menuService;
     private final StoreService storeService;
+
+    // 언어별 메뉴 조회 (이미 번역됨)
+    @GetMapping("/{userId}/settings/menu_info/{langCode}")
+    public ResponseEntity<List<MenuInfo>> getTranslatedMenuInfo(
+            @PathVariable Long userId,
+            @PathVariable String langCode) {
+
+        log.info("번역 메뉴 조회 요청: 사용자={}, 언어={}", userId, langCode);
+
+        try {
+            // 기존 메뉴만 조회
+            List<MenuInfo> menuInfoList = menuService.getExistingMenusByLanguage(userId, langCode);
+
+            log.info("기존 메뉴 조회 완료: 사용자={}, 언어={}, 메뉴 수={}", userId, langCode, menuInfoList.size());
+
+            return ResponseEntity.ok(menuInfoList);
+
+        } catch (IllegalArgumentException e) {
+            log.warn("잘못된 요청: {}", e.getMessage());
+            return ResponseEntity.badRequest().build();
+
+        } catch (Exception e) {
+            log.error("메뉴 조회 중 오류 발생: {}", e.getMessage(), e);
+            return ResponseEntity.internalServerError().build();
+        }
+    }
 
     // 가게 정보 + 메뉴 리스트
     @GetMapping("/{userId}")

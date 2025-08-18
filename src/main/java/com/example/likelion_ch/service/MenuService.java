@@ -14,13 +14,19 @@ import com.example.likelion_ch.repository.MenuRepository;
 import com.example.likelion_ch.repository.OrderItemRepository;
 import com.example.likelion_ch.repository.SiteUserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class MenuService {
@@ -77,11 +83,11 @@ public class MenuService {
         List<Menu> menuList = menuRepository.findByUser(user);
 
         return menuList.stream()
-                .map(menu -> new MenuInfo(
-                        menu.getMenuName(),
-                        menu.getDescription(),
-                        menu.getPrice()
-                ))
+                .map(menu -> MenuInfo.builder()
+                        .nameKo(menu.getMenuName())
+                        .description(menu.getDescription())
+                        .price(menu.getPrice())
+                        .build())
                 .toList();
     }
 
@@ -178,44 +184,175 @@ public class MenuService {
         menuRepository.delete(menu);
     }
 
-    // 언어별 메뉴 조회
-    public List<MenuInfo> getMenusByLanguage(Long userId, String langCode) {
+    /**
+     * 특정 사용자의 메뉴 정보를 요청된 언어로 조회
+     * 해당 언어로 번역된 메뉴가 없으면 자동 번역 후 저장
+     */
+    @Transactional
+    public List<MenuInfo> getMenuInfoByLanguage(Long userId, String langCode) {
+        // 사용자 존재 여부 확인
         SiteUser user = siteUserRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다: " + userId));
 
-        List<Menu> menuList = menuRepository.findByUser(user);
-        List<MenuInfo> result = new ArrayList<>();
+        // 지원 언어 검증
+        validateLanguageCode(langCode);
 
-        for (Menu menu : menuList) {
-            String translatedName = menu.getNameKo();
-            String translatedDescription = menu.getDescription();
+        // 해당 언어로 이미 번역된 메뉴가 있는지 확인
+        List<Menu> existingMenus = menuRepository.findByUserIdAndLanguage(userId, langCode);
 
-            if (!"ko".equals(langCode)) {
-                String userApiKey = user.getGeminiApiKey();
-                TranslationRequest requestName = new TranslationRequest(menu.getNameKo());
-                TranslationRequest requestDesc = new TranslationRequest(menu.getDescription());
-
-                switch (langCode) {
-                    case "en":
-                        translatedName = translationService.translateToEnglish(requestName, userApiKey).getTranslatedText();
-                        translatedDescription = translationService.translateToEnglish(requestDesc, userApiKey).getTranslatedText();
-                        break;
-                    case "ja":
-                        translatedName = translationService.translateToJapanese(requestName, userApiKey).getTranslatedText();
-                        translatedDescription = translationService.translateToJapanese(requestDesc, userApiKey).getTranslatedText();
-                        break;
-                    case "ch":
-                        translatedName = translationService.translateToChinese(requestName, userApiKey).getTranslatedText();
-                        translatedDescription = translationService.translateToChinese(requestDesc, userApiKey).getTranslatedText();
-                        break;
-                }
-            }
-
-            result.add(new MenuInfo(translatedName, translatedDescription, menu.getPrice()));
+        if (!existingMenus.isEmpty()) {
+            // 이미 번역된 메뉴가 있으면 바로 반환
+            log.info("사용자 {}의 {} 언어 메뉴 {}개를 조회했습니다.", userId, langCode, existingMenus.size());
+            return existingMenus.stream()
+                    .map(this::convertToMenuInfo)
+                    .collect(Collectors.toList());
         }
 
-        return result;
+        // 번역된 메뉴가 없으면 한국어 메뉴를 찾아서 번역
+        List<Menu> koreanMenus = findKoreanMenusByUserId(userId);
+
+        if (koreanMenus.isEmpty()) {
+            log.info("사용자 {}의 한국어 메뉴가 없습니다.", userId);
+            return new ArrayList<>();
+        }
+
+        // 한국어 메뉴를 요청된 언어로 번역하고 저장
+        List<MenuInfo> translatedMenus = new ArrayList<>();
+        for (Menu koreanMenu : koreanMenus) {
+            Menu translatedMenu = translateAndSaveMenu(koreanMenu, langCode);
+            translatedMenus.add(convertToMenuInfo(translatedMenu));
+        }
+
+        log.info("사용자 {}의 메뉴 {}개를 {} 언어로 번역하여 저장했습니다.", userId, translatedMenus.size(), langCode);
+        return translatedMenus;
+    }
+
+    @Transactional(readOnly = true)
+    public List<MenuInfo> getExistingMenusByLanguage(Long userId, String langCode) {
+        // 사용자 존재 여부 확인
+        SiteUser user = siteUserRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다: " + userId));
+
+        // 지원 언어 검증
+        validateLanguageCode(langCode);
+
+        // 해당 언어로 이미 번역된 메뉴만 조회
+        List<Menu> existingMenus = menuRepository.findByUserIdAndLanguage(userId, langCode);
+
+        return existingMenus.stream()
+                .map(this::convertToMenuInfo)
+                .collect(Collectors.toList());
+    }
+
+
+    /**
+     * 사용자의 한국어 메뉴 조회
+     */
+    private List<Menu> findKoreanMenusByUserId(Long userId) {
+        List<Menu> allMenus = menuRepository.findByUserIdOrderByUserMenuIdAndLanguage(userId);
+        
+        // 한국어 메뉴만 필터링 (language가 null이거나 "ko"인 경우)
+        return allMenus.stream()
+                .filter(menu -> menu.getLanguage() == null || "ko".equals(menu.getLanguage()))
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * 메뉴를 요청된 언어로 번역하고 저장
+     */
+    @Transactional
+    public Menu translateAndSaveMenu(Menu koreanMenu, String targetLangCode) {
+        try {
+            // 메뉴명 번역
+            String translatedName = translateMenuName(koreanMenu.getNameKo(), targetLangCode);
+            
+            // 메뉴 설명 번역
+            String translatedDescription = null;
+            if (koreanMenu.getDescription() != null && !koreanMenu.getDescription().isEmpty()) {
+                translatedDescription = translateMenuDescription(koreanMenu.getDescription(), targetLangCode);
+            }
+
+            // 번역된 메뉴 생성
+            Menu translatedMenu = new Menu();
+            translatedMenu.setUserMenuId(koreanMenu.getUserMenuId());
+            translatedMenu.setNameKo(translatedName);
+            translatedMenu.setPrice(koreanMenu.getPrice());
+            translatedMenu.setDescription(translatedDescription);
+            translatedMenu.setLanguage(targetLangCode);
+            translatedMenu.setUser(koreanMenu.getUser());
+
+            // 저장
+            Menu savedMenu = menuRepository.save(translatedMenu);
+            log.info("메뉴 번역 완료: {} -> {} (언어: {})", koreanMenu.getNameKo(), translatedName, targetLangCode);
+            
+            return savedMenu;
+            
+        } catch (Exception e) {
+            log.error("메뉴 번역 중 오류 발생: {}", e.getMessage(), e);
+            throw new RuntimeException("메뉴 번역 실패: " + e.getMessage());
+        }
+    }
+
+    /**
+     * 메뉴명 번역
+     */
+    private String translateMenuName(String koreanName, String targetLangCode) {
+        TranslationRequest request = TranslationRequest.builder()
+                .text(koreanName)
+                .menuName(koreanName)
+                .build();
+
+        String targetLanguage = getTargetLanguageName(targetLangCode);
+        return translationService.translate(request, targetLanguage, null).getTranslatedText();
+    }
+
+    /**
+     * 메뉴 설명 번역
+     */
+    private String translateMenuDescription(String koreanDescription, String targetLangCode) {
+        TranslationRequest request = TranslationRequest.builder()
+                .text(koreanDescription)
+                .description(koreanDescription)
+                .build();
+
+        String targetLanguage = getTargetLanguageName(targetLangCode);
+        return translationService.translate(request, targetLanguage, null).getTranslatedText();
+    }
+
+    /**
+     * 언어 코드를 언어명으로 변환
+     */
+    private String getTargetLanguageName(String langCode) {
+        return switch (langCode.toLowerCase()) {
+            case "en" -> "영어";
+            case "ch" -> "중국어";
+            case "ja" -> "일본어";
+            default -> throw new IllegalArgumentException("지원하지 않는 언어 코드입니다: " + langCode);
+        };
+    }
+
+    /**
+     * 언어 코드 검증
+     */
+    private void validateLanguageCode(String langCode) {
+        if (langCode == null || !List.of("en", "ch", "ja").contains(langCode.toLowerCase())) {
+            throw new IllegalArgumentException("지원하지 않는 언어 코드입니다. 'en', 'ch', 'ja' 중 하나를 사용해주세요.");
+        }
+    }
+
+    /**
+     * Menu 엔티티를 MenuInfo DTO로 변환
+     */
+    private MenuInfo convertToMenuInfo(Menu menu) {
+        return MenuInfo.builder()
+                .menuId(menu.getId())
+                .userId(menu.getUserId())
+                .nameKo(menu.getNameKo())
+                .userMenuId(menu.getUserMenuId())
+                .description(menu.getDescription())
+                .price(menu.getPrice())
+                .language(menu.getLanguage())
+                .build();
     }
 
 }
-

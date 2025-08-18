@@ -101,12 +101,12 @@ public class StoreSettingsController {
     }
 
     // 번역
-    @GetMapping("/menu_info/{langCode}")
+    @GetMapping("/menu_info/lang/{langCode}")
     public ResponseEntity<List<MenuInfo>> getMenuByLanguage(
             @PathVariable Long userId,
             @PathVariable String langCode) {
 
-        List<MenuInfo> menuList = menuService.getMenusByLanguage(userId, langCode);
+        List<MenuInfo> menuList = menuService.getMenuInfoByLanguage(userId, langCode);
 
         return ResponseEntity.ok(menuList);
     }

@@ -1,16 +1,27 @@
 package com.example.likelion_ch.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.math.BigDecimal;
 
-@Getter
-@Setter
+@Data
+@Builder
+@NoArgsConstructor
 @AllArgsConstructor
+@Getter
 public class MenuInfo {
-    private String menuName;
-    private String shortDescription;
-    private BigDecimal menuPrice;
+    private Long menuId;
+    private Long userId;
+    private String nameKo;
+    private Integer userMenuId;
+    private String description;
+    private BigDecimal price;
+    private String language;
+
+    // JPQL 전용 생성자
+    public MenuInfo(String nameKo, String description, BigDecimal price) {
+        this.nameKo = nameKo;
+        this.description = description;
+        this.price = price;
+    }
 }

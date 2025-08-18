@@ -22,9 +22,10 @@ public interface OrderItemRepository extends JpaRepository<OrderItem, Long> {
             "FROM OrderItem oi " +
             "JOIN oi.menu m " +
             "WHERE oi.menu.user.id = :userId AND m.language = :lang " +
-            "GROUP BY m.id " +
+            "GROUP BY m.id, m.nameKo, m.description, m.price " +
             "ORDER BY COUNT(oi.id) DESC")
     List<MenuInfo> findTopMenuByLanguage(@Param("userId") Long userId,
                                          @Param("lang") String lang,
                                          Pageable pageable);
+
 }
