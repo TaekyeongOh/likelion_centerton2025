@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+
 @Entity
 @Getter
 @Setter
@@ -16,6 +18,8 @@ public class OrderItem {
 
     private Integer quantity;
     private String language; // 주문자가 선택한 언어
+
+    private BigDecimal price;
 
     @ManyToOne
     @JoinColumn(name = "menu_id")
