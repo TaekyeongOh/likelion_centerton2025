@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import qr from '../../assets/img/cus_menu/qr.svg'
 import language from '../../assets/img/cus_menu/language.svg'
 import main from '../../assets/img/cus_menu/main.png'
@@ -8,6 +8,15 @@ import { Link } from 'react-router-dom'
 import NumberSelector from './Menu_Table'
 
 const Menu_language = () => {
+    const [counts, setCounts] = useState([0,0,0,0,0]);
+    
+    const handlePlus = (idx) => {
+        setCounts(prev => prev.map((val, i) => (i === idx ? val + 1 : val)));
+    };
+    const handleMinus = (idx) => {
+        setCounts(prev => prev.map((val, i) => (i === idx ? (val > 0 ? val - 1 : 0) : val)));
+    };
+    
   return (
     <div id="Menu_Language_Wrap" className="container">
             <img src={main} alt="" className="main" />
@@ -77,9 +86,9 @@ const Menu_language = () => {
                         주문
                         </button>
                         <div className="order_count">
-                        <button className="count_minus">-</button>
-                        1
-                        <button className="count_plus">+</button>
+                        <button className="count_minus" onClick={() => handleMinus(0)}>-</button>
+                    <div className="count">{counts[0]}</div>
+                    <button className="count_plus" onClick={() => handlePlus(0)}>+</button>
                         </div>
                     </div>
                 </div>
@@ -99,9 +108,9 @@ const Menu_language = () => {
                         주문
                         </button>
                         <div className="order_count">
-                        <button className="count_minus">-</button>
-                        1
-                        <button className="count_plus">+</button>
+                        <button className="count_minus" onClick={() => handleMinus(1)}>-</button>
+                    <div className="count">{counts[1]}</div>
+                    <button className="count_plus" onClick={() => handlePlus(1)}>+</button>
                         </div>
                     </div>
                 </div>
@@ -121,9 +130,9 @@ const Menu_language = () => {
                         주문
                         </button>
                         <div className="order_count">
-                        <button className="count_minus">-</button>
-                        1
-                        <button className="count_plus">+</button>
+                        <button className="count_minus" onClick={() => handleMinus(2)}>-</button>
+                    <div className="count">{counts[2]}</div>
+                    <button className="count_plus" onClick={() => handlePlus(2)}>+</button>
                         </div>
                     </div>
                 </div>
