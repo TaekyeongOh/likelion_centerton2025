@@ -9,6 +9,8 @@ import com.example.likelion_ch.repository.SiteUserRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
+
 @Component
 public class DataLoader implements CommandLineRunner {
 
@@ -35,23 +37,23 @@ public class DataLoader implements CommandLineRunner {
 
         // 2. 메뉴 생성
         Menu menu1 = new Menu();
-        menu1.setName("김치찌개");
-        menu1.setPrice(8000);
+        menu1.setMenuName("김치찌개");
+        menu1.setPrice(new BigDecimal(8000));
         menu1.setDescription("한국 전통의 매콤한 김치찌개");
         menu1.setUser(user);
         menuRepository.save(menu1);
 
         Menu menu2 = new Menu();
-        menu2.setName("된장찌개");
+        menu2.setMenuName("된장찌개");
         menu2.setDescription("구수하고 깊은 맛의 된장찌개");
-        menu2.setPrice(7500);
+        menu2.setPrice(new BigDecimal(7500));
         menu2.setUser(user);
         menuRepository.save(menu2);
 
         Menu menu3 = new Menu();
-        menu3.setName("비빔밥");
+        menu3.setMenuName("비빔밥");
         menu3.setDescription("각종 야채와 고추장으로 비빈 비빔밥");
-        menu3.setPrice(7000);
+        menu3.setPrice(new BigDecimal(7000));
         menu3.setUser(user);
         menuRepository.save(menu3);
 
