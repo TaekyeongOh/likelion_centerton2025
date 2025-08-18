@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Entity
 @Table(name = "restaurant_info")
 @Getter
@@ -33,4 +35,7 @@ public class RestaurantInfo {
 
     @Column(name = "table_count")
     private Integer tableCount; // 테이블 수
+
+    @ElementCollection
+    private List<String> features;
 }
