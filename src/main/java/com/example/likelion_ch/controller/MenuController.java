@@ -1,6 +1,7 @@
 package com.example.likelion_ch.controller;
 
 import com.example.likelion_ch.dto.*;
+import com.example.likelion_ch.entity.RestaurantInfo;
 import com.example.likelion_ch.entity.SiteUser;
 import com.example.likelion_ch.service.MenuService;
 import com.example.likelion_ch.service.StoreService;
@@ -11,6 +12,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.catalina.Store;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -83,13 +85,26 @@ public class MenuController {
         return ResponseEntity.ok(menuService.getTopMenuByLanguage(userId, lang));
     }
 
-    // 전체 메뉴 조회 (페이지네이션, 검색, 정렬 지원)
     @GetMapping("/{userId}/all")
-    public ResponseEntity<Map<String, Object>> getAllMenus(@PathVariable Long userId) {
+    public ResponseEntity<MenuWithRestaurantInfoDTO> getAllMenus(@PathVariable Long userId) {
+        // 메뉴 정보 조회
         List<MenuInfo> menus = menuService.getAllMenusForStore(userId);
 
-        Map<String, Object> response = new HashMap<>();
-        response.put("menus", menus);
+        // 가게 정보 조회
+        RestaurantInfo restaurant = storeService.getRestaurantInfoByUserId(userId);
+
+        // features 조회
+        List<String> features = storeService.getFeaturesByUserId(userId);
+
+        // DTO 생성
+        MenuWithRestaurantInfoDTO response = new MenuWithRestaurantInfoDTO(
+                restaurant.getRestaurantName(),
+                restaurant.getRestaurantAddress(),
+                restaurant.getShortDescription(),
+                restaurant.getLongDescription(),
+                menus,
+                features
+        );
 
         return ResponseEntity.ok(response);
     }

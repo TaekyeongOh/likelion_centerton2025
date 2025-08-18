@@ -61,4 +61,13 @@ public class SiteUser {
     @JsonManagedReference
     private Set<StoreFeature> features = new HashSet<>();
 
+    public RestaurantInfo getRestaurantInfo() {
+        RestaurantInfo info = new RestaurantInfo();
+        info.setRestaurantName(this.restaurantName);
+        info.setRestaurantAddress(this.restaurantAddress);
+        info.setShortDescription(this.shortDescription);
+        info.setLongDescription(this.longDescription);
+        // features는 Service에서 따로 세팅
+        return info;
+    }
 }
