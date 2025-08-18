@@ -8,6 +8,7 @@ import com.example.likelion_ch.entity.SiteUser;
 import com.example.likelion_ch.entity.StoreFeature;
 import com.example.likelion_ch.repository.SiteUserRepository;
 import com.example.likelion_ch.repository.StoreFeatureRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,20 +17,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
+@Transactional
 public class SiteUserService {
     private final SiteUserRepository siteUserRepository;
     private final StoreFeatureRepository storeFeatureRepository;
     private final BCryptPasswordEncoder passwordEncoder;
 
-    public SiteUserService(SiteUserRepository siteUserRepository,
-                           StoreFeatureRepository storeFeatureRepository) {
-        this.siteUserRepository = siteUserRepository;
-        this.storeFeatureRepository = storeFeatureRepository;
-        this.passwordEncoder = new BCryptPasswordEncoder();
-    }
-
     // 1단계 회원가입: SiteUser 엔티티를 반환하도록 수정
-    @Transactional
     public SiteUser registerStep1(UserRegisterStep1Request request) {
         if (!request.getPassword().equals(request.getConfirmPassword())) {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
@@ -46,7 +41,6 @@ public class SiteUserService {
     }
 
     // 2단계 가게 정보 등록: SiteUser 엔티티를 반환하도록 수정
-    @Transactional
     public SiteUser registerStep2(Long userId, UserRegisterStep2Request request) {
         SiteUser user = siteUserRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
@@ -83,5 +77,12 @@ public class SiteUserService {
         }
 
         return user; // 엔티티 직접 반환
+    }
+
+    // 사용자 ID로 조회
+    @Transactional(readOnly = true)
+    public SiteUser getUserById(Long userId) {
+        return siteUserRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
     }
 }
