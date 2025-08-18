@@ -13,14 +13,15 @@ import java.util.List;
 import java.util.Optional;
 
 public interface MenuRepository extends JpaRepository<Menu, Long> {
+
     List<Menu> findByUser(SiteUser user);
-    
+
     Optional<Menu> findByIdAndUserId(Long menuId, Long userId);
-    
+
     @Query("SELECT m FROM Menu m WHERE m.user.id = :userId " +
-           "AND (:query IS NULL OR m.nameKo LIKE %:query% OR m.description LIKE %:query%) " +
-           "AND (:minPrice IS NULL OR m.price >= :minPrice) " +
-           "AND (:maxPrice IS NULL OR m.price <= :maxPrice)")
+            "AND (:query IS NULL OR m.nameKo LIKE %:query% OR m.description LIKE %:query%) " +
+            "AND (:minPrice IS NULL OR m.price >= :minPrice) " +
+            "AND (:maxPrice IS NULL OR m.price <= :maxPrice)")
     Page<Menu> findByUserIdAndSearchCriteria(
             @Param("userId") Long userId,
             @Param("query") String query,
@@ -29,6 +30,8 @@ public interface MenuRepository extends JpaRepository<Menu, Long> {
             Pageable pageable);
 
     Optional<Menu> findByUserAndUserMenuId(SiteUser user, Integer userMenuId);
+
+    Optional<Menu> findByUserMenuIdAndUser_Id(Integer userMenuId, Long userId);
 
     @Query("SELECT COALESCE(MAX(m.userMenuId), 0) FROM Menu m WHERE m.user = :user")
     Integer findMaxUserMenuId(@Param("user") SiteUser user);
