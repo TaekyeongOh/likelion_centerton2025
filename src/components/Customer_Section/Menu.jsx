@@ -5,6 +5,7 @@ import main from '../../assets/img/cus_menu/main.png'
 import header from '../../assets/img/cus_menu/header.png'
 import cart from '../../assets/img/cus_menu/cart.svg'
 import { Link } from 'react-router-dom'
+import NumberSelector from './Menu_Table'
 
 const Main = () => {
   return (
@@ -99,7 +100,7 @@ const Main = () => {
             <div id='menu' className="menu3">
                 <div className="text">
                   <h1>들기름 비빔밥</h1>
-                  <p>나물 5종과 밥, 들기름, 간ㅇ으로 비벼먹
+                  <p>나물 5종과 밥, 들기름, 간장으로 비벼먹
                     <br />는 한국식 채식 비빔밥.
                   </p>
                 </div>
@@ -153,9 +154,16 @@ const Main = () => {
             </div>
           </div>
         </main>
-        <div className="cart_icon">
-          <img src={cart} alt="" />
-          <div className="cart_count">1</div>
+        <div className="icon">
+          <div id="icon" className="cart_icon">
+            <div className="cart">
+              <img src={cart} alt="" />
+            <div className="cart_count">1</div>
+          </div>
+          </div>
+          <div id="icon" className="table_icon">
+            <NumberSelector/>
+          </div>
         </div>
     </div>
   )

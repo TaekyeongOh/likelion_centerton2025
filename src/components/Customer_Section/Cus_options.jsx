@@ -13,6 +13,7 @@ import op07 from '../../assets/img/cus_options/op07.png'
 import op08 from '../../assets/img/cus_options/op08.png'
 
 const Cus_options = () => {
+  const navigate = useNavigate()
   // 어떤 옵션이 선택됐는지 저장 (index 기반)
   const [selected, setSelected] = useState(new Set())
 
@@ -40,7 +41,9 @@ const Cus_options = () => {
   return (
     <div className='cusoptions_wrap container'>
       <div className="header">
-        <button className="back_btn"><img src={back_btn} alt="" /></button>
+       <button className="back_btn" onClick={() => navigate('/cus_order')}>
+          <img src={back_btn} alt="뒤로가기" />
+        </button>
         <div className="right_btns">
           <button className="qr"><img src={qr_btn} alt="" /></button>
           <button className="trans"><img src={trans_btn} alt="" /></button>
