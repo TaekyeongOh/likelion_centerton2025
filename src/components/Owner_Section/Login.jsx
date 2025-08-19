@@ -27,7 +27,7 @@ const Login = () => {
       </div>
       </div>
       <div className="start_button">
-        <button onClick={() => navigate('/Login')}>
+        <button onClick={() => navigate('/storeinfo')}>
         <img src={Login_button} alt="" />
         </button>
         <p>아직 EATO의 회원이 아니신가요?</p>
