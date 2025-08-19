@@ -15,7 +15,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable()) // CSRF 보호 비활성화
                 .authorizeHttpRequests(auth -> auth
                         // 회원가입, 로그인 경로에 대한 모든 요청 허용
-                        .requestMatchers("/api/user/register/**", "/api/user/login", "/api/store/**").permitAll()
+                        .requestMatchers("/api/user/register/**", "/api/user/login", "/api/store/**", "/api/cart/**","/api/order-ratings/**","/orders/**").permitAll()
                         // 그 외의 모든 요청은 인증된 사용자만 허용
                         .anyRequest().authenticated()
                 )

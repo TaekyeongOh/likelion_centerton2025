@@ -1,28 +1,50 @@
 package com.example.likelion_ch.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
+@Table(name = "order_items")
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class OrderItem {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "order_item_id")
     private Long id;
 
-
-    private Integer quantity;
-    private String language; // 주문자가 선택한 언어
+    @ManyToOne
+    @JoinColumn(name = "order_id")
+    private Order order;
 
     @ManyToOne
     @JoinColumn(name = "menu_id")
-    private Menu menu; // 주문한 메뉴
+    private Menu menu;
+    private int quantity;//수량
+
+    // 필요하면 추가
+    private String language;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private SiteUser user; // 어떤 가게인지
+    private SiteUser user;
 
+    private int cardQuantity;       // 추가
+    private String cardNames;
+
+    @OneToMany(mappedBy = "orderItem", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<OrderItemOption> options = new ArrayList<>();
+
+    public void addOption(OrderItemOption option) {
+        this.options.add(option);
+        option.setOrderItem(this);
+    }
 }
