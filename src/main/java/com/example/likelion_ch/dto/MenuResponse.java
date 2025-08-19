@@ -19,6 +19,7 @@ public class MenuResponse {
     private String nameKo;
     private String description;
     private BigDecimal price;
+    private String imageUrl;  // S3에 업로드된 이미지의 접근 가능한 URL
     private Long version;
     private Instant createdAt;
     private Instant updatedAt;

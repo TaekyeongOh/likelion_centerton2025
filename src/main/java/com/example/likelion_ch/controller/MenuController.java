@@ -85,13 +85,24 @@ public class MenuController {
 
     // 메뉴 등록
     @PostMapping("/{userId}/settings/menu_info")
-    @Operation(summary = "메뉴 등록", description = "새로운 메뉴를 등록합니다.")
+    @Operation(summary = "메뉴 등록", description = "새로운 메뉴를 등록합니다. (이미지 포함 가능)")
     public ResponseEntity<MenuResponse> createMenu(
             @PathVariable Long userId,
-            @Valid @RequestBody MenuRequest request) {
+            @RequestParam("nameKo") String nameKo,
+            @RequestParam("description") String description,
+            @RequestParam("price") BigDecimal price,
+            @RequestParam(value = "image", required = false) MultipartFile image) {
+
         try {
-            MenuResponse menu = menuService.createMenu(userId, request);
+            MenuRequest request = MenuRequest.builder()
+                    .menuName(nameKo)
+                    .menuDescription(description)
+                    .menuPrice(price)
+                    .build();
+
+            MenuResponse menu = menuService.createMenuWithImage(userId, request, image);
             return ResponseEntity.ok(menu);
+
         } catch (RuntimeException e) {
             log.warn("메뉴 등록 실패: {}", e.getMessage());
             return ResponseEntity.badRequest().build();
@@ -100,6 +111,7 @@ public class MenuController {
             return ResponseEntity.internalServerError().build();
         }
     }
+
 
     // 베스트 메뉴 TOP3
     @GetMapping("/{userId}/top3")

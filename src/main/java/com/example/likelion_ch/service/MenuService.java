@@ -38,6 +38,7 @@ public class MenuService {
     private final SiteUserRepository siteUserRepository;
     private final OrderItemRepository orderItemRepository;
     private final GeminiTranslationService translationService;
+    private final S3Service s3Service;
 
     // 주문 생성
     public void createOrder(CreateOrderRequest request) {
@@ -105,6 +106,7 @@ public class MenuService {
                         .nameKo(menu.getNameKo())
                         .description(menu.getDescription())
                         .price(menu.getPrice())
+                        .imageUrl(menu.getImageUrl())
                         .userId(user.getId())
                         .createdAt(menu.getCreatedAt())
                         .updatedAt(menu.getUpdatedAt())
@@ -123,6 +125,7 @@ public class MenuService {
                 .nameKo(menu.getMenuName())
                 .description(menu.getDescription())
                 .price(menu.getPrice())
+                .imageUrl(menu.getImageUrl())
                 .userId(menu.getUser() != null ? menu.getUser().getId() : null)
                 .build();
     }
@@ -148,6 +151,47 @@ public class MenuService {
                 .nameKo(menu.getNameKo())
                 .description(menu.getDescription())
                 .price(menu.getPrice())
+                .imageUrl(menu.getImageUrl())
+                .userId(user.getId())
+                .build();
+    }
+
+    // 메뉴 등록 (이미지 포함)
+    @Transactional
+    public MenuResponse createMenuWithImage(Long userId, MenuRequest request, MultipartFile image) {
+        SiteUser user = siteUserRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+
+        Integer maxId = menuRepository.findMaxUserMenuId(user);
+
+        Menu menu = new Menu();
+        menu.setUser(user);
+        menu.setUserMenuId(maxId + 1);
+        menu.setNameKo(request.getMenuName());
+        menu.setDescription(request.getMenuDescription());
+        menu.setPrice(request.getMenuPrice());
+
+        // 이미지가 제공된 경우 처리
+        if (image != null && !image.isEmpty()) {
+            try {
+                // 이미지를 S3에 업로드하고 URL을 메뉴에 설정
+                String imageUrl = s3Service.uploadImage(image, userId, maxId + 1);
+                menu.setImageUrl(imageUrl);
+                log.info("메뉴 이미지 등록: {}", imageUrl);
+            } catch (Exception e) {
+                log.error("이미지 저장 실패: {}", e.getMessage());
+            }
+        }
+
+        menuRepository.save(menu);
+
+        return MenuResponse.builder()
+                .id(menu.getId())
+                .userMenuId(menu.getUserMenuId())
+                .nameKo(menu.getNameKo())
+                .description(menu.getDescription())
+                .price(menu.getPrice())
+                .imageUrl(menu.getImageUrl())
                 .userId(user.getId())
                 .build();
     }
@@ -172,6 +216,7 @@ public class MenuService {
                 .nameKo(menu.getNameKo())
                 .description(menu.getDescription())
                 .price(menu.getPrice())
+                .imageUrl(menu.getImageUrl())
                 .userId(user.getId())
                 .build();
     }
@@ -191,10 +236,14 @@ public class MenuService {
 
         // 이미지가 제공된 경우 이미지 처리 로직 추가
         if (image != null && !image.isEmpty()) {
-            // TODO: 이미지 저장 및 처리 로직 구현
-            // 예: 이미지 파일을 서버에 저장하고 경로를 메뉴 엔티티에 저장
-            log.info("이미지 업데이트 요청: {}", image.getOriginalFilename());
-            // menu.setImagePath(savedImagePath); // 이미지 경로 저장
+            // 이미지를 S3에 업로드하고 URL을 메뉴에 저장
+            try {
+                String imageUrl = s3Service.uploadImage(image, userId, userMenuId);
+                menu.setImageUrl(imageUrl);
+                log.info("이미지 업데이트 완료: {}", image.getOriginalFilename());
+            } catch (Exception e) {
+                log.error("이미지 저장 실패: {}", e.getMessage());
+            }
         }
 
         menuRepository.save(menu);
@@ -205,6 +254,7 @@ public class MenuService {
                 .nameKo(menu.getNameKo())
                 .description(menu.getDescription())
                 .price(menu.getPrice())
+                .imageUrl(menu.getImageUrl())
                 .userId(user.getId())
                 .build();
     }
@@ -228,11 +278,14 @@ public class MenuService {
         Menu menu = menuRepository.findByUserAndUserMenuId(user, userMenuId)
                 .orElseThrow(() -> new RuntimeException("사용자 소유의 메뉴가 아닙니다."));
 
-        // TODO: 이미지 파일 삭제 로직 구현
-        // 예: 메뉴에 이미지가 있다면 서버에서 이미지 파일도 삭제
-        if (menu.getImagePath() != null) {
-            log.info("이미지 파일 삭제 요청: {}", menu.getImagePath());
-            // deleteImageFile(menu.getImagePath()); // 이미지 파일 삭제
+        // 이미지 파일이 존재하면 S3에서 삭제
+        if (menu.getImageUrl() != null) {
+            try {
+                s3Service.deleteImage(menu.getImageUrl());
+                log.info("이미지 파일 삭제 요청: {}", menu.getImageUrl());
+            } catch (Exception e) {
+                log.error("이미지 파일 삭제 실패: {}", e.getMessage());
+            }
         }
 
         menuRepository.delete(menu);
