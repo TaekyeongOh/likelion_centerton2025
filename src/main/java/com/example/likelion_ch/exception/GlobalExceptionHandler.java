@@ -19,17 +19,7 @@ import java.util.Map;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<ProblemDetail> handleIllegalArgumentException(IllegalArgumentException e) {
-        log.warn("잘못된 요청: {}", e.getMessage());
-        return createProblemDetail(HttpStatus.BAD_REQUEST, "잘못된 요청", e.getMessage());
-    }
 
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<ProblemDetail> handleRuntimeException(RuntimeException e) {
-        log.error("런타임 오류: {}", e.getMessage(), e);
-        return createProblemDetail(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류", e.getMessage());
-    }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ProblemDetail> handleValidationException(MethodArgumentNotValidException e) {
@@ -61,6 +51,29 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ProblemDetail> handleResourceAccessException(ResourceAccessException e) {
         log.error("외부 API 연결 오류: {}", e.getMessage(), e);
         return createProblemDetail(HttpStatus.GATEWAY_TIMEOUT, "번역 서비스 연결 오류", "번역 서비스 연결에 실패했습니다");
+    }
+
+    // 이미지 업로드 관련 예외 처리
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ProblemDetail> handleImageValidationException(IllegalArgumentException e) {
+        if (e.getMessage().contains("파일 크기") || e.getMessage().contains("파일 형식") || e.getMessage().contains("파일명")) {
+            log.warn("이미지 파일 검증 실패: {}", e.getMessage());
+            return createProblemDetail(HttpStatus.BAD_REQUEST, "이미지 파일 오류", e.getMessage());
+        }
+        // 기존 IllegalArgumentException 처리
+        log.warn("잘못된 요청: {}", e.getMessage());
+        return createProblemDetail(HttpStatus.BAD_REQUEST, "잘못된 요청", e.getMessage());
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<ProblemDetail> handleImageUploadException(RuntimeException e) {
+        if (e.getMessage().contains("이미지 업로드") || e.getMessage().contains("S3")) {
+            log.error("이미지 업로드 실패: {}", e.getMessage(), e);
+            return createProblemDetail(HttpStatus.INTERNAL_SERVER_ERROR, "이미지 업로드 실패", "이미지 업로드 중 오류가 발생했습니다");
+        }
+        // 기존 RuntimeException 처리
+        log.error("런타임 오류: {}", e.getMessage(), e);
+        return createProblemDetail(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류", e.getMessage());
     }
 
     private ResponseEntity<ProblemDetail> createProblemDetail(HttpStatus status, String title, String detail) {

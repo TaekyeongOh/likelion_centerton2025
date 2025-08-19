@@ -30,12 +30,16 @@ public class RestaurantInfo {
     private String shortDescription; // 한 줄 설명
 
     @Column(length = 1000, name = "long_description")
-    private String longDescription; // 상세 설명@Column(length = 255)
-    private String description; // 한 줄 설명
+    private String longDescription; // 상세 설명
 
     @Column(name = "table_count")
     private Integer tableCount; // 테이블 수
 
     @ElementCollection
-    private List<String> features;
+    private List<String> features; // 가게 특징들
+
+    // features가 null인 경우를 위한 안전한 getter
+    public List<String> getFeatures() {
+        return features != null ? features : List.of();
+    }
 }
