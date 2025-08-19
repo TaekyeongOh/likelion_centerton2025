@@ -6,6 +6,7 @@ import trans_btn from '../../assets/img/cus_order/trans_btn.svg';
 import md01 from '../../assets/img/cus_order/md01.png';
 import starEmpty from '../../assets/img/cus_order/star_empty.png';
 import starFilled from '../../assets/img/cus_order/star_filled.png';
+import { Link } from 'react-router-dom';
 
 const Cus_order = () => {
   const navigate = useNavigate();
@@ -44,7 +45,9 @@ const Cus_order = () => {
   return (
     <div className='cusorder_wrap container'>
       <div className="header">
-        <button className="back_btn"><img src={back_btn} alt="" /></button>
+        <Link to='/'>
+          <button className="back_btn"><img src={back_btn} alt="" /></button>
+        </Link>
         <div className="right_btns">
           <button className="qr"><img src={qr_btn} alt="" /></button>
           <button className="trans"><img src={trans_btn} alt="" /></button>

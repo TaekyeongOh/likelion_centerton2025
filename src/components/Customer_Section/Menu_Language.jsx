@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import qr from '../../assets/img/cus_menu/qr.svg'
 import language from '../../assets/img/cus_menu/language.svg'
 import main from '../../assets/img/cus_menu/main.png'
@@ -8,6 +8,54 @@ import { Link } from 'react-router-dom'
 import NumberSelector from './Menu_Table'
 
 const Menu_language = () => {
+
+    //메뉴 카운트
+    const [counts, setCounts] = useState([0,0,0,0,0]);
+
+    const handlePlus = (idx) => {
+        setCounts(prev => prev.map((val, i) => (i === idx ? val + 1 : val)));
+        };
+    const handleMinus = (idx) => {
+        setCounts(prev => prev.map((val, i) => (i === idx ? (val > 0 ? val - 1 : 0) : val)));
+        };
+
+
+    const [menus, setMenus] = useState([]); // API 결과 저장
+        const [loading, setLoading] = useState(true);
+        const [error, setError] = useState(null);
+
+
+        useEffect(() => {
+      const userId = '1';
+      const lang = 'KR'; // API 명세서에 따른 언어 값 (예: KR, EN, JP, CN)
+
+      const fetchLanguageMenus = async () => {
+        setLoading(true);
+        setError(null);
+        try {
+      const response = await fetch(`/api/store/${userId}/recommend?lang=${lang}`);
+      if (!response.ok) {
+        throw new Error('API 호출에 실패했습니다.');
+      }
+      const data = await response.json();
+      
+      if (data && Array.isArray(data.topMenus)) {
+        setMenus(data.topMenus);
+      } else {
+        console.error("API 응답에 topMenus 배열이 없습니다.");
+        setMenus([]);
+      }
+    } catch (err) {
+      console.error('데이터를 가져오는 데 실패했습니다:', err);
+      setError(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+    fetchLanguageMenus();
+    }, []); // 컴포넌트가 처음 렌더링될 때 한 번만 실행
+
   return (
     <div id="Menu_Language_Wrap" className="container">
             <img src={main} alt="" className="main" />
@@ -61,85 +109,41 @@ const Menu_language = () => {
                     <div className="tag">맵지 않은 메뉴</div>
                 </div>
                 <div className="menu_list">
-                    <div className="recommend">
-                        <div className="num">No. 1</div>
                     <div className="recommend_text">일본인 손님들에겐 가장 인기인 메뉴에요!</div>
-                    </div>
-                    <div id='menu' className="menu1">
-                    <div className="text">
-                        <h1>소고기 미역국 정식</h1>
-                        <p>부드러운 소고기와 진한 국물의 
-                        <br />미역국 + 밥 + 반찬 3종. 맵지 않아요!
-                        </p>
-                    </div>
-                    <div className="order">
-                        <button className="order_btn">
-                        주문
-                        </button>
-                        <div className="order_count">
-                        <button className="count_minus">-</button>
-                        1
-                        <button className="count_plus">+</button>
-                        </div>
-                    </div>
+            {menus.map((menu, idx) => (
+             <div>
+               <div className="num">No. {idx + 1}</div>
+              <div key={idx} className={`menu_card menu${idx + 1}`}>
+                <div className="text">
+                  <h1>{menu.menuName}</h1>
+                  <p>{menu.shortDescription}</p>
                 </div>
-                <div className="recommend">
-                        <div className="num">No. 2</div>
-                    <div className="recommend_text"></div>
+                <div className="order">
+                  <button className="order_btn">주문</button>
+                  <div className="order_count">
+                    <button className="count_minus" onClick={() => handleMinus(idx)}>-</button>
+                    <div className="count">{counts[idx]}</div>
+                    <button className="count_plus" onClick={() => handlePlus(idx)}>+</button>
+                  </div>
                 </div>
-                <div id='menu' className="menu2">
-                    <div className="text">
-                        <h1>제육볶음 덮밥</h1>
-                        <p>매콤달콤하게 볶은 돼지고기 제육에 고
-                        <br />소한 계란후라이까지.
-                        </p>
-                    </div>
-                    <div className="order">
-                        <button className="order_btn">
-                        주문
-                        </button>
-                        <div className="order_count">
-                        <button className="count_minus">-</button>
-                        1
-                        <button className="count_plus">+</button>
-                        </div>
-                    </div>
-                </div>
-                 <div className="recommend">
-                        <div className="num">No. 2</div>
-                    <div className="recommend_text"></div>
-                </div>
-                <div id='menu' className="menu3">
-                    <div className="text">
-                        <h1>들기름 비빔밥</h1>
-                        <p>나물 5종과 밥, 들기름, 간장으로 비벼먹
-                        <br />는 한국식 채식 비빔밥.
-                        </p>
-                    </div>
-                    <div className="order">
-                        <button className="order_btn">
-                        주문
-                        </button>
-                        <div className="order_count">
-                        <button className="count_minus">-</button>
-                        1
-                        <button className="count_plus">+</button>
-                        </div>
-                    </div>
-                </div>
-                </div>
+              </div>
+              </div>
+            ))}
+          </div>
                 </div>
             </main>
             <div className="icon">
-                <div id="icon" className="cart_icon">
-                    <div className="cart">
-                    <img src={cart} alt="" />
-                    <div className="cart_count">1</div>
+                <Link to='/cus_order'>
+                    <div id="icon" className="cart_icon">
+                        <div className="cart">
+                            <img src={cart} alt="" />
+                        <div className="cart_count">1</div>
+                        </div>
+                    </div>
+                </Link>
+                <div id="icon" className="table_icon">
+                    <NumberSelector/>
                 </div>
-                </div>
-            <div id="icon" className="table_icon">
-                <NumberSelector/>
-            </div>
         </div>
     </div>
   )

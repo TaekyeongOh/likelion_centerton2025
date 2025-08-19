@@ -16,9 +16,11 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/user/register/**", "/api/user/login").permitAll()
-                        .requestMatchers(HttpMethod.PATCH, "/api/store/**").permitAll()
-                        .anyRequest().authenticated()
+                         .requestMatchers("/api/**").permitAll() // '/api/'로 시작하는 모든 요청은 허용
+                         .anyRequest().authenticated()        // 나머지 모든 요청은 인증 필요
+                        // .requestMatchers("/api/user/register/**", "/api/user/login").permitAll()
+                        // .requestMatchers(HttpMethod.PATCH, "/api/store/**").permitAll()
+                        // .anyRequest().authenticated()
                 )
                 .formLogin(form -> form.disable()) // 기본 HTML 로그인 폼 비활성화
                 .httpBasic(httpBasic -> httpBasic.disable()); // HTTP Basic도 비활성화
