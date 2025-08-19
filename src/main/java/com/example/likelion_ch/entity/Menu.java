@@ -38,6 +38,9 @@ public class Menu {
     @Column(length = 10)
     private String language;
 
+    @Column(length = 500)
+    private String imagePath;          // 이미지 파일 경로
+
     @Version
     private Long version;              // Optimistic Lock
 
