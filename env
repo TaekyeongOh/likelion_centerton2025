@@ -1,0 +1,36 @@
+# ===========================================
+# 음식점 메뉴 관리 서비스 환경변수 설정
+# ===========================================
+
+# Gemini API Configuration
+# Google AI Studio (https://makersuite.google.com/app/apikey)에서 발급받은 API 키
+GEMINI_API_KEY=AIzaSyBjxm6d3vvA1HvgNjY2mkD0C_lBYO_CORs
+
+# Gemini API 추가 설정 (선택사항)
+GEMINI_API_BASE_URL=https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro-latest:generateContent
+GEMINI_API_TIMEOUT=3000
+
+# JWT Configuration
+# 최소 512비트 이상의 안전한 시크릿 키를 사용하세요
+JWT_SECRET=your-super-secret-jwt-key-that-is-at-least-512-bits-long-for-hs512-algorithm-security-requirements-and-more-random-characters-here
+JWT_EXPIRATION=86400000
+
+# Database Configuration (선택사항)
+# 개발 환경에서는 H2 인메모리 DB 사용
+# SPRING_DATASOURCE_URL=jdbc:h2:mem:testdb
+# SPRING_DATASOURCE_USERNAME=sa
+# SPRING_DATASOURCE_PASSWORD=
+
+# Server Configuration (선택사항)
+# SERVER_PORT=8081
+
+# Logging Configuration (선택사항)
+# LOGGING_LEVEL_COM_EXAMPLE_MENU=DEBUG
+# LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_SECURITY=DEBUG
+
+# ===========================================
+# 보안 주의사항
+# ===========================================
+# 1. 이 파일은 절대 Git에 커밋하지 마세요
+# 2. 실제 API 키와 시크릿은 안전하게 보관하세요
+# 3. 프로덕션 환경에서는 더 강력한 시크릿을 사용하세요
