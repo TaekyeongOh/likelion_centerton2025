@@ -20,6 +20,9 @@ public class GeminiTranslationService {
 
     private final WebClient webClient;
 
+    @Value("${google.gemini.api.base-url}")
+    private String baseUrl;
+
     @Value("${google.gemini.api.key}")
     private String defaultApiKey;
 
@@ -99,7 +102,7 @@ public class GeminiTranslationService {
                 .build();
 
         return webClient.post()
-                .uri("?key=" + apiKey)
+                .uri(baseUrl + "?key=" + apiKey)
                 .bodyValue(geminiRequest)
                 .retrieve()
                 .bodyToMono(GeminiResponse.class)

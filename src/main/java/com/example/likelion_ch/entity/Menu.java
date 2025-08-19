@@ -38,6 +38,9 @@ public class Menu {
     @Column(length = 10)
     private String language;
 
+    @Column(length = 500)
+    private String imageUrl;          // S3에 업로드된 이미지의 접근 가능한 URL
+
     @Version
     private Long version;              // Optimistic Lock
 
