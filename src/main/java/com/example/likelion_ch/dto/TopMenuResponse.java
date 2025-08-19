@@ -9,11 +9,4 @@ import java.util.List;
 @AllArgsConstructor
 public class TopMenuResponse {
     private List<MenuInfo> topMenus;
-
-    @Data
-    @AllArgsConstructor
-    public static class MenuInfo {
-        private String menuName;
-        private String shortDescription;
-    }
 }
