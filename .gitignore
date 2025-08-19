@@ -1,4 +1,5 @@
 env
+.env
 .cursor
 application.yml
 HELP.md
