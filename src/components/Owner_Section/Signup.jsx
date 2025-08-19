@@ -31,7 +31,7 @@ const Signup = () => {
       </div>
       </div>
       <div className="start_button">
-        <button onClick={() => navigate('/Storeinfo')}>
+        <button onClick={() => navigate('/login')}>
         <img src={Signup_button} alt="" />
         </button>
         <p>이미 EATO의 회원이신가요?</p>
