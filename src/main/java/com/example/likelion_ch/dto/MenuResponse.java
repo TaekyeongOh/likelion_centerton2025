@@ -1,21 +1,27 @@
 package com.example.likelion_ch.dto;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+
+import java.math.BigDecimal;
+import java.time.Instant;
+
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class MenuResponse {
-    private Long menuId;
-    private String menuName;
-    private String menuDescription;
-    private Integer menuPrice;
-
-    public MenuResponse(Long menuId, String menuName, String menuDescription, Integer menuPrice) {
-        this.menuId = menuId;
-        this.menuName = menuName;
-        this.menuDescription = menuDescription;
-        this.menuPrice = menuPrice;
-    }
-
-    // Getter
-    public Long getMenuId() { return menuId; }
-    public String getMenuName() { return menuName; }
-    public String getMenuDescription() { return menuDescription; }
-    public Integer getMenuPrice() { return menuPrice; }
+    private Long id;
+    private Integer userMenuId;
+    private String nameKo;
+    private String description;
+    private BigDecimal price;
+    private Long version;
+    private Instant createdAt;
+    private Instant updatedAt;
+    private Long userId;
 }
