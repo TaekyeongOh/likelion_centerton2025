@@ -52,7 +52,7 @@ public class SiteUser {
     @Column(name = "updated_at")
     private Instant updatedAt;
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_features",
             joinColumns = @JoinColumn(name = "user_id"),
