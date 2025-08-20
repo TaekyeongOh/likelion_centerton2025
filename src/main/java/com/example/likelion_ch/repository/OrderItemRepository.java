@@ -6,18 +6,21 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+
 import java.util.List;
 
 public interface OrderItemRepository extends JpaRepository<OrderItem, Long> {
 
+    // 사용자별 top 메뉴
     @Query("SELECT new com.example.likelion_ch.dto.MenuInfo(m.nameKo, m.description, m.price) " +
             "FROM OrderItem oi " +
             "JOIN oi.menu m " +
             "WHERE oi.menu.user.id = :userId " +
-            "GROUP BY m.id " +
+            "GROUP BY m.id, m.nameKo, m.description, m.price " +
             "ORDER BY COUNT(oi.id) DESC")
     List<MenuInfo> findTopMenu(@Param("userId") Long userId, Pageable pageable);
 
+    // 사용자별, 언어별 top 메뉴
     @Query("SELECT new com.example.likelion_ch.dto.MenuInfo(m.nameKo, m.description, m.price) " +
             "FROM OrderItem oi " +
             "JOIN oi.menu m " +
@@ -27,5 +30,5 @@ public interface OrderItemRepository extends JpaRepository<OrderItem, Long> {
     List<MenuInfo> findTopMenuByLanguage(@Param("userId") Long userId,
                                          @Param("lang") String lang,
                                          Pageable pageable);
-
 }
+
