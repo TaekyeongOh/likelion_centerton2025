@@ -179,8 +179,9 @@ public class MenuController {
             return ResponseEntity.internalServerError().build();
         }
     }
+}
 
-    // 메뉴 수정 (이미지 포함)
+   /* // 메뉴 수정 (이미지 포함)
     @PutMapping("/{userId}/settings/menu_info/id/{userMenuId}")
     @Operation(summary = "메뉴 수정", description = "메뉴 정보와 이미지를 수정합니다.")
     public ResponseEntity<MenuResponse> updateMenu(
@@ -247,3 +248,4 @@ public class MenuController {
         }
     }
 }
+*/
